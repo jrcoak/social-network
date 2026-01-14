@@ -1,28 +1,8 @@
 import { create } from 'zustand';
 import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase, IS_SUPABASE_CONFIGURED } from '@/lib/supabase';
 import type { Profile, UserRole } from '@/types';
 import { MOCK_PROFILE, MOCK_USER, MOCK_SESSION } from '@/lib/mockData';
-
-// Enable preview mode to see the app without Supabase
-// Can be enabled via ?preview=true URL parameter or when Supabase is not configured
-const checkPreviewMode = () => {
-  // Check URL parameter first
-  if (typeof window !== 'undefined') {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('preview') === 'true') {
-      return true;
-    }
-  }
-  
-  // Check if Supabase is configured
-  try {
-    const url = supabase.supabaseUrl;
-    return !url || url === 'https://placeholder.supabase.co' || url.includes('placeholder');
-  } catch {
-    return true;
-  }
-};
 
 interface AuthState {
   user: SupabaseUser | null;
@@ -149,14 +129,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   initialize: async () => {
     try {
       set({ loading: true });
-
-      // Check preview mode at runtime
-      const isPreviewMode = checkPreviewMode();
       
-      // Use mock data in preview mode
-      if (isPreviewMode) {
+      // Use mock data when Supabase is not configured
+      if (!IS_SUPABASE_CONFIGURED) {
         console.log('🎭 Preview Mode: Using mock authentication data');
-        console.log('Add ?preview=true to URL or configure Supabase to use real data');
+        console.log('Configure Supabase credentials to use real authentication');
         set({
           user: MOCK_USER as any,
           session: MOCK_SESSION as any,

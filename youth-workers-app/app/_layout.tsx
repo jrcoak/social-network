@@ -6,22 +6,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
 import { LoadingSpinner } from '@/components/ui';
 
+import { IS_SUPABASE_CONFIGURED } from '@/lib/supabase';
+
 const queryClient = new QueryClient();
 
-// Check if we're in preview mode by checking Supabase URL
-const checkPreviewMode = () => {
-  try {
-    const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-    return !url || url === 'https://placeholder.supabase.co' || url.includes('placeholder');
-  } catch {
-    return true;
-  }
-};
-
-const PREVIEW_MODE = checkPreviewMode();
-
 function PreviewModeBanner() {
-  if (!PREVIEW_MODE) return null;
+  if (IS_SUPABASE_CONFIGURED) return null;
   
   return (
     <View className="bg-yellow-500 px-4 py-2">
