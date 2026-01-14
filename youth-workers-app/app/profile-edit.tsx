@@ -176,7 +176,7 @@ export default function ProfileEdit() {
                   <View className="w-20 h-20 bg-white rounded-full" />
                 </View>
               )}
-              <View className="absolute bottom-0 right-0 bg-primary-600 rounded-full p-3">
+              <View className="absolute bottom-0 right-0 bg-primary rounded-full p-3">
                 <Text className="text-white text-xs font-bold">
                   {uploading ? '...' : '+'}
                 </Text>

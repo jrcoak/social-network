@@ -165,7 +165,7 @@ export default function Chat() {
           )}
           <View
             className={`px-4 py-2 rounded-2xl ${
-              isOwnMessage ? 'bg-primary-600' : 'bg-gray-200'
+              isOwnMessage ? 'bg-primary' : 'bg-gray-200'
             }`}
           >
             <Text className={isOwnMessage ? 'text-white' : 'text-gray-900'}>
@@ -207,14 +207,16 @@ export default function Chat() {
           {channels.map((channel) => (
             <TouchableOpacity
               key={channel.id}
-              className={`px-4 py-2 rounded-full mr-2 ${
-                selectedChannel?.id === channel.id ? 'bg-primary-600' : 'bg-gray-200'
+              className={`px-4 py-2 rounded-full mr-2 border-2 ${
+                selectedChannel?.id === channel.id 
+                  ? 'bg-neutral-200 border-primary' 
+                  : 'bg-white border-neutral-300'
               }`}
               onPress={() => setSelectedChannel(channel)}
             >
               <Text
                 className={`text-sm font-medium ${
-                  selectedChannel?.id === channel.id ? 'text-white' : 'text-gray-700'
+                  selectedChannel?.id === channel.id ? 'text-neutral-700' : 'text-neutral-600'
                 }`}
               >
                 #{channel.name}
@@ -257,7 +259,7 @@ export default function Chat() {
           />
           <TouchableOpacity
             className={`w-12 h-12 rounded-full items-center justify-center ${
-              newMessage.trim() && !sending ? 'bg-primary-600' : 'bg-gray-300'
+              newMessage.trim() && !sending ? 'bg-primary' : 'bg-gray-300'
             }`}
             onPress={sendMessage}
             disabled={!newMessage.trim() || sending}

@@ -81,14 +81,14 @@ export default function Map() {
           className="-mx-4 px-4"
         >
           <TouchableOpacity
-            className={`px-4 py-2 rounded-full mr-2 ${
-              !selectedState ? 'bg-primary-600' : 'bg-gray-200'
+            className={`px-4 py-2 rounded-full mr-2 border-2 ${
+              !selectedState ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
             }`}
             onPress={() => setSelectedState(null)}
           >
             <Text
               className={`text-sm font-medium ${
-                !selectedState ? 'text-white' : 'text-gray-700'
+                !selectedState ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               All States
@@ -97,14 +97,14 @@ export default function Map() {
           {states.map((state) => (
             <TouchableOpacity
               key={state}
-              className={`px-4 py-2 rounded-full mr-2 ${
-                selectedState === state ? 'bg-primary-600' : 'bg-gray-200'
+              className={`px-4 py-2 rounded-full mr-2 border-2 ${
+                selectedState === state ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
               }`}
               onPress={() => setSelectedState(state)}
             >
               <Text
                 className={`text-sm font-medium ${
-                  selectedState === state ? 'text-white' : 'text-gray-700'
+                  selectedState === state ? 'text-neutral-700' : 'text-neutral-600'
                 }`}
               >
                 {state} ({membersByState[state]?.length || 0})

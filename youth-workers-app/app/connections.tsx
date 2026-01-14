@@ -136,28 +136,32 @@ export default function Connections() {
 
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className={`flex-1 py-2 rounded-lg ${
-              tab === 'accepted' ? 'bg-primary-600' : 'bg-gray-200'
+            className={`flex-1 py-2 rounded-lg border-2 ${
+              tab === 'accepted' 
+                ? 'bg-neutral-200 border-primary' 
+                : 'bg-white border-neutral-300'
             }`}
             onPress={() => setTab('accepted')}
           >
             <Text
               className={`text-center font-medium ${
-                tab === 'accepted' ? 'text-white' : 'text-gray-700'
+                tab === 'accepted' ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               Connected
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`flex-1 py-2 rounded-lg ${
-              tab === 'pending' ? 'bg-primary-600' : 'bg-gray-200'
+            className={`flex-1 py-2 rounded-lg border-2 ${
+              tab === 'pending' 
+                ? 'bg-neutral-200 border-primary' 
+                : 'bg-white border-neutral-300'
             }`}
             onPress={() => setTab('pending')}
           >
             <Text
               className={`text-center font-medium ${
-                tab === 'pending' ? 'text-white' : 'text-gray-700'
+                tab === 'pending' ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               Requests

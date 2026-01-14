@@ -94,7 +94,7 @@ export default function Directory() {
       <View className="items-end gap-1">
         <Badge variant="secondary">{item.organization_state}</Badge>
         <TouchableOpacity
-          className="px-3 py-1 bg-primary-600 rounded-lg mt-1"
+          className="px-3 py-1 bg-primary rounded-lg mt-1"
           onPress={() => sendConnectionRequest(item.id)}
         >
           <Text className="text-white text-xs font-medium">Connect</Text>
@@ -128,14 +128,16 @@ export default function Directory() {
           className="mt-3 -mx-4 px-4"
         >
           <TouchableOpacity
-            className={`px-4 py-2 rounded-full mr-2 ${
-              !selectedState ? 'bg-primary-600' : 'bg-gray-200'
+            className={`px-4 py-2 rounded-full mr-2 border-2 ${
+              !selectedState 
+                ? 'bg-neutral-200 border-primary' 
+                : 'bg-white border-neutral-300'
             }`}
             onPress={() => setSelectedState(null)}
           >
             <Text
               className={`text-sm font-medium ${
-                !selectedState ? 'text-white' : 'text-gray-700'
+                !selectedState ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               All States
@@ -144,14 +146,16 @@ export default function Directory() {
           {states.map((state) => (
             <TouchableOpacity
               key={state}
-              className={`px-4 py-2 rounded-full mr-2 ${
-                selectedState === state ? 'bg-primary-600' : 'bg-gray-200'
+              className={`px-4 py-2 rounded-full mr-2 border-2 ${
+                selectedState === state 
+                  ? 'bg-neutral-200 border-primary' 
+                  : 'bg-white border-neutral-300'
               }`}
               onPress={() => setSelectedState(state)}
             >
               <Text
                 className={`text-sm font-medium ${
-                  selectedState === state ? 'text-white' : 'text-gray-700'
+                  selectedState === state ? 'text-neutral-700' : 'text-neutral-600'
                 }`}
               >
                 {state}

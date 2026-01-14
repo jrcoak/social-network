@@ -154,7 +154,7 @@ export default function Events() {
         {profile?.status === 'approved' && (
           <View className="flex-row gap-2">
             <TouchableOpacity
-              className={`flex-1 py-2 rounded-lg border ${
+              className={`flex-1 py-2 rounded-lg border-2 border ${
                 userRSVP?.status === 'going'
                   ? 'bg-green-600 border-green-600'
                   : 'bg-white border-gray-300'
@@ -170,7 +170,7 @@ export default function Events() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`flex-1 py-2 rounded-lg border ${
+              className={`flex-1 py-2 rounded-lg border-2 border ${
                 userRSVP?.status === 'maybe'
                   ? 'bg-yellow-500 border-yellow-500'
                   : 'bg-white border-gray-300'
@@ -186,7 +186,7 @@ export default function Events() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`flex-1 py-2 rounded-lg border ${
+              className={`flex-1 py-2 rounded-lg border-2 border ${
                 userRSVP?.status === 'not_going'
                   ? 'bg-gray-600 border-gray-600'
                   : 'bg-white border-gray-300'
@@ -220,28 +220,28 @@ export default function Events() {
         {/* Filter tabs */}
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className={`flex-1 py-2 rounded-lg ${
-              filter === 'upcoming' ? 'bg-primary-600' : 'bg-gray-200'
+            className={`flex-1 py-2 rounded-lg border-2 ${
+              filter === 'upcoming' ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
             }`}
             onPress={() => setFilter('upcoming')}
           >
             <Text
               className={`text-center font-medium ${
-                filter === 'upcoming' ? 'text-white' : 'text-gray-700'
+                filter === 'upcoming' ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               Upcoming
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`flex-1 py-2 rounded-lg ${
-              filter === 'past' ? 'bg-primary-600' : 'bg-gray-200'
+            className={`flex-1 py-2 rounded-lg border-2 ${
+              filter === 'past' ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
             }`}
             onPress={() => setFilter('past')}
           >
             <Text
               className={`text-center font-medium ${
-                filter === 'past' ? 'text-white' : 'text-gray-700'
+                filter === 'past' ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               Past

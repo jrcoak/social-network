@@ -281,13 +281,13 @@ export default function AdminPanel() {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className={`flex-1 py-2 rounded-lg ${
-              tab === 'users' ? 'bg-primary-600' : 'bg-gray-200'
+              tab === 'users' ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
             }`}
             onPress={() => setTab('users')}
           >
             <Text
               className={`text-center font-medium ${
-                tab === 'users' ? 'text-white' : 'text-gray-700'
+                tab === 'users' ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               Users ({pendingUsers.length})
@@ -295,13 +295,13 @@ export default function AdminPanel() {
           </TouchableOpacity>
           <TouchableOpacity
             className={`flex-1 py-2 rounded-lg ${
-              tab === 'events' ? 'bg-primary-600' : 'bg-gray-200'
+              tab === 'events' ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
             }`}
             onPress={() => setTab('events')}
           >
             <Text
               className={`text-center font-medium ${
-                tab === 'events' ? 'text-white' : 'text-gray-700'
+                tab === 'events' ? 'text-neutral-700' : 'text-neutral-600'
               }`}
             >
               Events ({pendingEvents.length})

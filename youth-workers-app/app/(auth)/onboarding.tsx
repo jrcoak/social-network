@@ -120,7 +120,7 @@ export default function Onboarding() {
         {/* Progress bar */}
         <View className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
           <View
-            className="h-full bg-primary-600"
+            className="h-full bg-primary"
             style={{ width: `${(step / 3) * 100}%` }}
           />
         </View>
