@@ -99,6 +99,42 @@ export default function Events() {
     return { going, maybe };
   };
 
+  const exportToCalendar = (event: Event) => {
+    const startDate = new Date(event.start_time);
+    const endDate = event.end_time ? new Date(event.end_time) : new Date(startDate.getTime() + 60 * 60 * 1000);
+    
+    const formatDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Youth Workers NE//Event//EN',
+      'BEGIN:VEVENT',
+      `UID:${event.id}@youthworkersne.org`,
+      `DTSTAMP:${formatDate(new Date())}`,
+      `DTSTART:${formatDate(startDate)}`,
+      `DTEND:${formatDate(endDate)}`,
+      `SUMMARY:${event.title}`,
+      `DESCRIPTION:${event.description?.replace(/\n/g, '\\n') || ''}`,
+      event.location ? `LOCATION:${event.location}` : '',
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].filter(Boolean).join('\r\n');
+
+    // Create blob and download
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${event.title.replace(/[^a-z0-9]/gi, '_')}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const renderEvent = ({ item }: { item: Event }) => {
     const userRSVP = getUserRSVP(item);
     const { going, maybe } = getRSVPCounts(item);
@@ -152,6 +188,16 @@ export default function Events() {
             {going} going · {maybe} maybe
           </Text>
         </View>
+
+        {/* Calendar export */}
+        <TouchableOpacity
+          className="mb-3"
+          onPress={() => exportToCalendar(item)}
+        >
+          <Text className="text-sm text-primary-600 font-medium">
+            📅 Add to Calendar
+          </Text>
+        </TouchableOpacity>
 
         {/* RSVP buttons */}
         {profile?.status === 'approved' && (

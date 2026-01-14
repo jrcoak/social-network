@@ -63,14 +63,23 @@ export default function Directory() {
     setFilteredMembers(filtered);
   };
 
+  const sendConnectionRequest = async (userId: string) => {
+    try {
+      const { error } = await supabase.from('connections').insert({
+        user_id: userId,
+        connected_user_id: userId,
+        status: 'pending',
+      });
+      if (error) throw error;
+      alert('Connection request sent!');
+    } catch (error) {
+      console.error('Error sending connection request:', error);
+      alert('Failed to send connection request');
+    }
+  };
+
   const renderMember = ({ item }: { item: Profile }) => (
-    <TouchableOpacity
-      className="flex-row items-center p-4 border-b border-gray-200 bg-white"
-      onPress={() => {
-        // TODO: Navigate to member profile
-        console.log('View profile:', item.id);
-      }}
-    >
+    <View className="flex-row items-center p-4 border-b border-gray-200 bg-white">
       <Avatar
         name={`${item.first_name} ${item.last_name}`}
         imageUrl={item.profile_picture_url}
@@ -83,8 +92,16 @@ export default function Directory() {
         <Text className="text-sm text-gray-600">{item.role_title}</Text>
         <Text className="text-sm text-gray-500">{item.organization_name}</Text>
       </View>
-      <Badge variant="secondary">{item.organization_state}</Badge>
-    </TouchableOpacity>
+      <View className="items-end gap-1">
+        <Badge variant="secondary">{item.organization_state}</Badge>
+        <TouchableOpacity
+          className="px-3 py-1 bg-primary-600 rounded-lg mt-1"
+          onPress={() => sendConnectionRequest(item.id)}
+        >
+          <Text className="text-white text-xs font-medium">Connect</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 
   if (loading) {
