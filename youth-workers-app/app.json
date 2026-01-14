@@ -43,8 +43,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "webpack",
-      "output": "static"
+      "bundler": "metro",
+      "output": "single"
     },
     "plugins": [
       "expo-router",
