@@ -78,7 +78,7 @@ export default function Directory() {
   };
 
   const renderMember = ({ item }: { item: Profile }) => (
-    <View className="flex-row items-center p-4 bg-white border-b border-gray-100">
+    <View className="flex-row items-center p-5 mx-4 mb-3 bg-white rounded-2xl shadow-md">
       <Avatar
         name={`${item.first_name} ${item.last_name}`}
         imageUrl={item.profile_picture_url}
@@ -110,8 +110,8 @@ export default function Directory() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="px-4 pt-12 pb-3 bg-white border-b border-gray-200">
-        <Text className="text-3xl font-bold text-gray-900 mb-4">Directory</Text>
+      <View className="px-6 pt-14 pb-4 bg-white">
+        <Text className="text-4xl font-bold text-gray-900 mb-4">Directory</Text>
         
         {/* Search */}
         <TextInput

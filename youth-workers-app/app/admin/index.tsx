@@ -271,7 +271,7 @@ export default function AdminPanel() {
       {/* Header */}
       <View className="px-4 pt-12 pb-4 bg-white border-b border-gray-200 shadow-soft">
         <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-2xl font-bold text-gray-900">⚙️ Admin Panel</Text>
+          <Text className="text-2xl font-bold text-gray-900">Admin Panel</Text>
           <TouchableOpacity onPress={() => router.back()}>
             <Text className="text-primary-600 font-medium">Back</Text>
           </TouchableOpacity>

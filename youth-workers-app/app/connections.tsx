@@ -132,7 +132,7 @@ export default function Connections() {
   return (
     <View className="flex-1 bg-gray-50">
       <View className="px-4 pt-12 pb-4 bg-white border-b border-gray-200 shadow-soft">
-        <Text className="text-2xl font-bold text-gray-900 mb-4">🤝 Connections</Text>
+        <Text className="text-2xl font-bold text-gray-900 mb-4">Connections</Text>
 
         <View className="flex-row gap-2">
           <TouchableOpacity

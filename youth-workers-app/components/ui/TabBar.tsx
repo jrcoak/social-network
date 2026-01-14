@@ -10,31 +10,30 @@ export function TabBar({ showAdminTab = false }: TabBarProps) {
   const pathname = usePathname();
 
   const tabs = [
-    { name: 'Chat', path: '/chat', icon: '💬' },
-    { name: 'Directory', path: '/directory', icon: '👥' },
-    { name: 'Map', path: '/map', icon: '🗺️' },
-    { name: 'Events', path: '/events', icon: '📅' },
-    { name: 'Profile', path: '/profile', icon: '👤' },
+    { name: 'Chat', path: '/chat' },
+    { name: 'Directory', path: '/directory' },
+    { name: 'Map', path: '/map' },
+    { name: 'Events', path: '/events' },
+    { name: 'Profile', path: '/profile' },
   ];
 
   if (showAdminTab) {
-    tabs.push({ name: 'Admin', path: '/admin', icon: '⚙️' });
+    tabs.push({ name: 'Admin', path: '/admin' });
   }
 
   return (
-    <View className="flex-row bg-white/80 backdrop-blur-xl border-t border-gray-200">
+    <View className="flex-row bg-white border-t border-gray-100">
       {tabs.map((tab) => {
         const isActive = pathname === tab.path;
         return (
           <TouchableOpacity
             key={tab.path}
-            className="flex-1 items-center py-2.5"
+            className={`flex-1 items-center py-3 ${isActive ? 'border-t-2 border-primary-500' : ''}`}
             onPress={() => router.push(tab.path as any)}
           >
-            <Text className="text-2xl mb-0.5">{tab.icon}</Text>
             <Text
-              className={`text-xs ${
-                isActive ? 'text-primary font-semibold' : 'text-gray-500'
+              className={`text-sm font-semibold ${
+                isActive ? 'text-primary-600' : 'text-gray-400'
               }`}
             >
               {tab.name}

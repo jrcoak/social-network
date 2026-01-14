@@ -154,7 +154,7 @@ export default function ProfileEdit() {
   return (
     <View className="flex-1 bg-gray-50">
       <View className="px-4 pt-12 pb-4 bg-white border-b border-gray-200 shadow-soft">
-        <Text className="text-2xl font-bold text-gray-900">✏️ Edit Profile</Text>
+        <Text className="text-2xl font-bold text-gray-900">Edit Profile</Text>
       </View>
 
       <ScrollView className="flex-1 px-4 py-6">

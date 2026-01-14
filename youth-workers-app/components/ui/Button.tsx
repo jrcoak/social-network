@@ -17,28 +17,28 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'rounded-xl items-center justify-center flex-row';
+  const baseClasses = 'rounded-2xl items-center justify-center flex-row shadow-lg';
   
   const variantClasses = {
-    primary: 'bg-primary active:opacity-80',
-    secondary: 'bg-gray-200 active:bg-gray-300',
-    outline: 'border border-gray-300 bg-transparent active:bg-gray-100',
+    primary: 'bg-gradient-to-r from-primary-500 to-purple-500 active:opacity-90',
+    secondary: 'bg-gray-100 active:bg-gray-200',
+    outline: 'border-2 border-primary-500 bg-transparent active:bg-primary-50',
     ghost: 'bg-transparent active:bg-gray-100',
-    danger: 'bg-red-500 active:opacity-80',
+    danger: 'bg-gradient-to-r from-red-500 to-pink-500 active:opacity-90',
   };
   
   const sizeClasses = {
-    sm: 'px-4 py-2',
-    md: 'px-5 py-3',
-    lg: 'px-6 py-3.5',
+    sm: 'px-5 py-2.5',
+    md: 'px-6 py-3.5',
+    lg: 'px-8 py-4',
   };
   
   const textVariantClasses = {
-    primary: 'text-white font-semibold',
-    secondary: 'text-gray-900 font-semibold',
-    outline: 'text-primary font-semibold',
-    ghost: 'text-primary font-semibold',
-    danger: 'text-white font-semibold',
+    primary: 'text-white font-bold',
+    secondary: 'text-gray-900 font-bold',
+    outline: 'text-primary-600 font-bold',
+    ghost: 'text-gray-700 font-semibold',
+    danger: 'text-white font-bold',
   };
   
   const textSizeClasses = {

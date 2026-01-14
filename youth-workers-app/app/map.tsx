@@ -69,7 +69,7 @@ export default function Map() {
     <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="px-4 pt-12 pb-4 bg-white border-b border-gray-200 shadow-soft">
-        <Text className="text-2xl font-bold text-gray-900 mb-2">🗺️ Member Map</Text>
+        <Text className="text-2xl font-bold text-gray-900 mb-2">Member Map</Text>
         <Text className="text-sm text-gray-600 mb-4">
           Locations are fuzzed for privacy (±5-10 miles)
         </Text>
@@ -117,7 +117,7 @@ export default function Map() {
       {/* Map placeholder - would integrate Mapbox here */}
       <View className="h-64 bg-gray-100 border-b border-gray-200 items-center justify-center">
         <Text className="text-gray-500 text-center px-4">
-          🗺️ Interactive map coming soon{'\n'}
+          Interactive map coming soon{'\n'}
           (Requires Mapbox integration)
         </Text>
       </View>
