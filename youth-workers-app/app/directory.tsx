@@ -1,9 +1,8 @@
-import { TabBar } from '@/components/ui';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import { LoadingSpinner, Avatar, Badge } from '@/components/ui';
+import { LoadingSpinner, Avatar, Badge, TabBar } from '@/components/ui';
 import type { Profile } from '@/types';
 
 export default function Directory() {

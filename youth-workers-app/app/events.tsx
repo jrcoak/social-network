@@ -1,4 +1,3 @@
-import { TabBar } from '@/components/ui';
 import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';

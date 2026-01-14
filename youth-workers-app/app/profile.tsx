@@ -1,7 +1,6 @@
-import { TabBar } from '@/components/ui';
 import { View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, LoadingSpinner } from '@/components/ui';
+import { Button, LoadingSpinner, TabBar } from '@/components/ui';
 import { ProfileHeader, ProfileDetails } from '@/components/profile';
 import { useAuth } from '@/hooks/useAuth';
 
