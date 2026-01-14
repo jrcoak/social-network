@@ -122,10 +122,6 @@ export default function AdminPanel() {
       {/* Dates */}
       <View className="mb-3">
         <Text className="text-xs text-gray-500">
-          Birth: {item.birth_month}/{item.birth_day}
-          {item.birth_year && `/${item.birth_year}`}
-        </Text>
-        <Text className="text-xs text-gray-500">
           Hire Date: {item.hire_month}/{item.hire_year}
         </Text>
         <Text className="text-xs text-gray-500">

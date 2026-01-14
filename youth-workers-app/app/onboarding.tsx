@@ -22,9 +22,6 @@ const onboardingSchema = z.object({
   organization_state: z.enum(['MA', 'NH', 'ME', 'VT', 'RI', 'CT']),
   organization_zip: z.string().min(5, 'Valid ZIP code is required'),
   bio: z.string().min(20, 'Bio must be at least 20 characters'),
-  birth_month: z.number().min(1).max(12),
-  birth_day: z.number().min(1).max(31),
-  birth_year: z.number().optional(),
   hire_month: z.number().min(1).max(12),
   hire_year: z.number().min(1900).max(new Date().getFullYear()),
 });
@@ -54,9 +51,6 @@ export default function Onboarding() {
       organization_state: profile?.organization_state || 'MA',
       organization_zip: profile?.organization_zip || '',
       bio: profile?.bio || '',
-      birth_month: profile?.birth_month || 1,
-      birth_day: profile?.birth_day || 1,
-      birth_year: profile?.birth_year || undefined,
       hire_month: profile?.hire_month || 1,
       hire_year: profile?.hire_year || new Date().getFullYear(),
     },
@@ -83,9 +77,6 @@ export default function Onboarding() {
           organization_state: data.organization_state,
           organization_zip: data.organization_zip,
           bio: data.bio,
-          birth_month: data.birth_month,
-          birth_day: data.birth_day,
-          birth_year: data.birth_year,
           hire_month: data.hire_month,
           hire_year: data.hire_year,
           status: 'pending', // Set to pending for admin approval
@@ -304,64 +295,11 @@ export default function Onboarding() {
         {step === 3 && (
           <View className="gap-4">
             <Text className="text-lg font-semibold text-gray-900 mb-2">
-              Additional Information
+              Employment Information
             </Text>
 
             <Text className="text-sm text-gray-600 mb-2">
-              Birth Date (Month and Day are required)
-            </Text>
-            <View className="flex-row gap-4">
-              <Controller
-                control={control}
-                name="birth_month"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    label="Month"
-                    value={value.toString()}
-                    onChangeText={(text) => onChange(parseInt(text) || 1)}
-                    error={errors.birth_month?.message}
-                    placeholder="1-12"
-                    keyboardType="number-pad"
-                    containerClassName="flex-1"
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="birth_day"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    label="Day"
-                    value={value.toString()}
-                    onChangeText={(text) => onChange(parseInt(text) || 1)}
-                    error={errors.birth_day?.message}
-                    placeholder="1-31"
-                    keyboardType="number-pad"
-                    containerClassName="flex-1"
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="birth_year"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    label="Year (Optional)"
-                    value={value?.toString() || ''}
-                    onChangeText={(text) => onChange(text ? parseInt(text) : undefined)}
-                    error={errors.birth_year?.message}
-                    placeholder="1990"
-                    keyboardType="number-pad"
-                    containerClassName="flex-1"
-                  />
-                )}
-              />
-            </View>
-
-            <Text className="text-sm text-gray-600 mb-2 mt-4">
-              Hire Date
+              When did you start in your current role?
             </Text>
             <View className="flex-row gap-4">
               <Controller

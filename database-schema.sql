@@ -25,9 +25,6 @@ CREATE TABLE public.profiles (
   organization_state TEXT NOT NULL CHECK (organization_state IN ('MA', 'NH', 'ME', 'VT', 'RI', 'CT')),
   organization_zip TEXT NOT NULL,
   bio TEXT NOT NULL,
-  birth_month INTEGER NOT NULL CHECK (birth_month BETWEEN 1 AND 12),
-  birth_day INTEGER NOT NULL CHECK (birth_day BETWEEN 1 AND 31),
-  birth_year INTEGER,
   hire_month INTEGER NOT NULL CHECK (hire_month BETWEEN 1 AND 12),
   hire_year INTEGER NOT NULL,
   hire_day INTEGER,
@@ -39,7 +36,7 @@ CREATE TABLE public.profiles (
   ministry_focus_tags TEXT[], -- Array of tags
   
   -- Visibility settings (JSON for flexibility)
-  visibility_settings JSONB DEFAULT '{"phone": "private", "birth_month_day": "connections", "birth_year": "private", "hire_date": "members", "profile_picture": "members"}'::jsonb,
+  visibility_settings JSONB DEFAULT '{"phone": "private", "hire_date": "members", "profile_picture": "members"}'::jsonb,
   
   -- Location (fuzzed for privacy)
   location GEOGRAPHY(POINT, 4326), -- PostGIS point
@@ -251,7 +248,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, first_name, last_name, phone, role_title, organization_name, organization_address, organization_city, organization_state, organization_zip, bio, birth_month, birth_day, hire_month, hire_year, status)
+  INSERT INTO public.profiles (id, email, first_name, last_name, phone, role_title, organization_name, organization_address, organization_city, organization_state, organization_zip, bio, hire_month, hire_year, status)
   VALUES (
     NEW.id,
     NEW.email,
@@ -265,8 +262,6 @@ BEGIN
     'MA', -- organization_state - default, to be updated in onboarding
     '', -- organization_zip - to be filled in onboarding
     '', -- bio - to be filled in onboarding
-    1, -- birth_month - default, to be updated in onboarding
-    1, -- birth_day - default, to be updated in onboarding
     1, -- hire_month - default, to be updated in onboarding
     EXTRACT(YEAR FROM NOW())::INTEGER, -- hire_year - default to current year
     'guest' -- status - starts as guest
