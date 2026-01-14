@@ -9,13 +9,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 
 const eventSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(10, 'Description must be at least 10 characters'),
+  title: z.string().min(1, 'Title is required').max(200, 'Title too long'),
+  description: z.string().min(10, 'Description must be at least 10 characters').max(2000, 'Description too long'),
   start_time: z.string().min(1, 'Start date/time is required'),
   end_time: z.string().optional(),
   event_type: z.enum(['in_person', 'virtual']),
-  location: z.string().optional(),
-  virtual_link: z.string().url().optional().or(z.literal('')),
+  location: z.string().max(200, 'Location too long').optional(),
+  virtual_link: z.string().url('Must be a valid URL (e.g., https://zoom.us/...)').optional().or(z.literal('')),
 });
 
 type EventFormData = z.infer<typeof eventSchema>;

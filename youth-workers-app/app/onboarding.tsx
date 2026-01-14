@@ -12,16 +12,21 @@ import { NEW_ENGLAND_STATES } from '@/constants/States';
 import { MINISTRY_FOCUS_TAGS } from '@/constants/Roles';
 
 const onboardingSchema = z.object({
-  first_name: z.string().min(1, 'First name is required'),
-  last_name: z.string().min(1, 'Last name is required'),
-  phone: z.string().min(10, 'Valid phone number is required'),
-  role_title: z.string().min(1, 'Role/title is required'),
-  organization_name: z.string().min(1, 'Organization name is required'),
-  organization_address: z.string().min(1, 'Address is required'),
-  organization_city: z.string().min(1, 'City is required'),
+  first_name: z.string().min(1, 'First name is required').max(50, 'First name too long'),
+  last_name: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
+  phone: z.string()
+    .min(10, 'Phone number must be at least 10 digits')
+    .max(15, 'Phone number too long')
+    .regex(/^[\d\s\-\(\)\+]+$/, 'Phone number can only contain digits, spaces, dashes, parentheses, and +')
+    .refine((val) => val.replace(/\D/g, '').length >= 10, 'Phone number must have at least 10 digits'),
+  role_title: z.string().min(1, 'Role/title is required').max(100, 'Role/title too long'),
+  organization_name: z.string().min(1, 'Organization name is required').max(100, 'Organization name too long'),
+  organization_address: z.string().min(1, 'Address is required').max(200, 'Address too long'),
+  organization_city: z.string().min(1, 'City is required').max(100, 'City too long'),
   organization_state: z.enum(['MA', 'NH', 'ME', 'VT', 'RI', 'CT']),
-  organization_zip: z.string().min(5, 'Valid ZIP code is required'),
-  bio: z.string().min(20, 'Bio must be at least 20 characters'),
+  organization_zip: z.string()
+    .regex(/^\d{5}(-\d{4})?$/, 'ZIP code must be 5 digits or 5+4 format (e.g., 12345 or 12345-6789)'),
+  bio: z.string().min(20, 'Bio must be at least 20 characters').max(500, 'Bio too long (max 500 characters)'),
   hire_month: z.number().min(1).max(12),
   hire_year: z.number().min(1900).max(new Date().getFullYear()),
 });
