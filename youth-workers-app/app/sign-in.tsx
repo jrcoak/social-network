@@ -41,39 +41,44 @@ export default function SignIn() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-gradient-to-b from-primary-50 to-white">
       <View className="flex-1 justify-center items-center px-6">
-        {/* Logo/Icon placeholder */}
-        <View className="w-24 h-24 bg-primary-100 rounded-full items-center justify-center mb-8">
-          <Text className="text-4xl">👥</Text>
+        {/* Logo */}
+        <View className="w-32 h-32 bg-primary-600 rounded-3xl items-center justify-center mb-8 shadow-medium">
+          <Text className="text-6xl">🤝</Text>
         </View>
 
         {/* Title */}
-        <Text className="text-3xl font-bold text-gray-900 text-center mb-2">
+        <Text className="text-4xl font-bold text-gray-900 text-center mb-3">
           Youth Workers NE
         </Text>
-        <Text className="text-base text-gray-600 text-center mb-12 max-w-sm">
-          Connect with youth workers across New England
+        <Text className="text-lg text-gray-600 text-center mb-12 max-w-md leading-relaxed">
+          Connect, collaborate, and grow with youth workers across New England
         </Text>
 
         {/* Sign in button */}
         <Button
           onPress={handleSignIn}
           loading={loading}
-          className="w-full max-w-sm"
+          className="w-full max-w-sm shadow-soft"
           size="lg"
         >
-          Sign in with Google
+          🔐 Sign in with Google
         </Button>
 
         {/* Info text */}
-        <Text className="text-sm text-gray-500 text-center mt-8 max-w-sm">
-          This is a private community. Your account will need to be approved by an administrator before you can access all features.
-        </Text>
+        <View className="mt-8 max-w-md bg-blue-50 rounded-xl p-4 border border-blue-100">
+          <Text className="text-sm text-blue-900 text-center font-medium mb-1">
+            Private Community
+          </Text>
+          <Text className="text-sm text-blue-700 text-center">
+            Your account will be reviewed by an administrator before you can access all features.
+          </Text>
+        </View>
       </View>
 
       {/* Footer */}
-      <View className="p-6 border-t border-gray-200">
+      <View className="p-6">
         <Text className="text-xs text-gray-500 text-center">
           By signing in, you agree to our Terms of Service and Privacy Policy
         </Text>

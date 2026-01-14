@@ -27,7 +27,7 @@ export function ProfileHeader({ profile, isOwnProfile, onEditPress }: ProfileHea
   };
 
   return (
-    <View className="bg-white p-6 border-b border-gray-200">
+    <View className="bg-gradient-to-b from-primary-50 to-white p-6 border-b border-gray-100 shadow-soft">
       <View className="flex-row items-start gap-4">
         <Avatar
           uri={profile.profile_picture_url}
