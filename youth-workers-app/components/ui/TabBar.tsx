@@ -22,19 +22,19 @@ export function TabBar({ showAdminTab = false }: TabBarProps) {
   }
 
   return (
-    <View className="flex-row bg-white border-t border-gray-200">
+    <View className="flex-row bg-white/80 backdrop-blur-xl border-t border-gray-200">
       {tabs.map((tab) => {
         const isActive = pathname === tab.path;
         return (
           <TouchableOpacity
             key={tab.path}
-            className="flex-1 items-center py-2"
+            className="flex-1 items-center py-2.5"
             onPress={() => router.push(tab.path as any)}
           >
-            <Text className="text-2xl mb-1">{tab.icon}</Text>
+            <Text className="text-2xl mb-0.5">{tab.icon}</Text>
             <Text
               className={`text-xs ${
-                isActive ? 'text-primary-600 font-semibold' : 'text-gray-600'
+                isActive ? 'text-primary font-semibold' : 'text-gray-500'
               }`}
             >
               {tab.name}

@@ -16,29 +16,29 @@ export function Input({
   className = '',
   ...props
 }: InputProps) {
-  const inputClasses = `border rounded-lg px-4 py-3 text-base ${
+  const inputClasses = `border rounded-xl px-4 py-3 text-base bg-gray-50 ${
     error
-      ? 'border-red-500 focus:border-red-600'
-      : 'border-gray-300 focus:border-primary-600'
+      ? 'border-red-500'
+      : 'border-gray-200'
   } ${className}`;
 
   return (
     <View className={`${containerClassName}`}>
       {label && (
-        <Text className="text-sm font-medium text-gray-700 mb-1.5">
+        <Text className="text-sm font-medium text-gray-900 mb-1.5">
           {label}
         </Text>
       )}
       <TextInput
         className={inputClasses}
-        placeholderTextColor="#9ca3af"
+        placeholderTextColor="#8E8E93"
         {...props}
       />
       {error && (
-        <Text className="text-sm text-red-600 mt-1">{error}</Text>
+        <Text className="text-xs text-red-500 mt-1">{error}</Text>
       )}
       {helperText && !error && (
-        <Text className="text-sm text-gray-500 mt-1">{helperText}</Text>
+        <Text className="text-xs text-gray-500 mt-1">{helperText}</Text>
       )}
     </View>
   );

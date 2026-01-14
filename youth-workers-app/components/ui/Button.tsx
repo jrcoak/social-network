@@ -17,27 +17,27 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'rounded-lg items-center justify-center flex-row';
+  const baseClasses = 'rounded-xl items-center justify-center flex-row';
   
   const variantClasses = {
-    primary: 'bg-primary-600 active:bg-primary-700',
-    secondary: 'bg-gray-600 active:bg-gray-700',
-    outline: 'border-2 border-primary-600 bg-transparent active:bg-primary-50',
+    primary: 'bg-primary active:opacity-80',
+    secondary: 'bg-gray-200 active:bg-gray-300',
+    outline: 'border border-gray-300 bg-transparent active:bg-gray-100',
     ghost: 'bg-transparent active:bg-gray-100',
-    danger: 'bg-red-600 active:bg-red-700',
+    danger: 'bg-red-500 active:opacity-80',
   };
   
   const sizeClasses = {
-    sm: 'px-3 py-2',
-    md: 'px-4 py-3',
-    lg: 'px-6 py-4',
+    sm: 'px-4 py-2',
+    md: 'px-5 py-3',
+    lg: 'px-6 py-3.5',
   };
   
   const textVariantClasses = {
     primary: 'text-white font-semibold',
-    secondary: 'text-white font-semibold',
-    outline: 'text-primary-600 font-semibold',
-    ghost: 'text-gray-700 font-semibold',
+    secondary: 'text-gray-900 font-semibold',
+    outline: 'text-primary font-semibold',
+    ghost: 'text-primary font-semibold',
     danger: 'text-white font-semibold',
   };
   

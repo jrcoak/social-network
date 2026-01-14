@@ -159,16 +159,16 @@ export default function Chat() {
         )}
         <View className={`ml-2 max-w-[75%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
           {!isOwnMessage && (
-            <Text className="text-xs font-medium text-gray-700 mb-1">
+            <Text className="text-xs font-medium text-gray-600 mb-1">
               {item.profiles.first_name} {item.profiles.last_name}
             </Text>
           )}
           <View
-            className={`px-4 py-3 rounded-2xl shadow-soft ${
-              isOwnMessage ? 'bg-primary-600' : 'bg-white border border-gray-100'
+            className={`px-4 py-2.5 rounded-2xl ${
+              isOwnMessage ? 'bg-primary' : 'bg-gray-100'
             }`}
           >
-            <Text className={`leading-relaxed ${isOwnMessage ? 'text-white' : 'text-gray-900'}`}>
+            <Text className={`text-base ${isOwnMessage ? 'text-white' : 'text-gray-900'}`}>
               {item.content}
             </Text>
           </View>
@@ -199,10 +199,10 @@ export default function Chat() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-white">
       {/* Header with channel selector */}
-      <View className="px-4 pt-12 pb-4 bg-white border-b border-gray-200 shadow-soft">
-        <Text className="text-2xl font-bold text-gray-900 mb-3">💬 Chat</Text>
+      <View className="px-4 pt-12 pb-3 bg-white border-b border-gray-200">
+        <Text className="text-3xl font-bold text-gray-900 mb-3">Chat</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {channels.map((channel) => (
             <TouchableOpacity
