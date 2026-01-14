@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, FlatList, TextInput, Keyboard
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner, Avatar, TabBar } from '@/components/ui';
+import { LoadingSpinner, Avatar, TabBar, EmptyState } from '@/components/ui';
 import type { Database } from '@/types/database.types';
 
 type Channel = Database['public']['Tables']['channels']['Row'];
@@ -237,11 +237,11 @@ export default function Chat() {
           keyExtractor={(item) => item.id}
           contentContainerClassName="p-4"
           ListEmptyComponent={
-            <View className="flex-1 justify-center items-center p-8">
-              <Text className="text-gray-500 text-center">
-                No messages yet. Start the conversation!
-              </Text>
-            </View>
+            <EmptyState
+              icon="💬"
+              title="No messages yet"
+              description="Be the first to start the conversation in this channel!"
+            />
           }
         />
 

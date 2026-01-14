@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner, Badge, Button, TabBar } from '@/components/ui';
+import { LoadingSpinner, Badge, Button, TabBar, EmptyState } from '@/components/ui';
 import type { Database } from '@/types/database.types';
 
 type Event = Database['public']['Tables']['events']['Row'] & {
@@ -305,11 +305,17 @@ export default function Events() {
         keyExtractor={(item) => item.id}
         contentContainerClassName="p-4"
         ListEmptyComponent={
-          <View className="flex-1 justify-center items-center p-8">
-            <Text className="text-gray-500 text-center">
-              {filter === 'upcoming' ? 'No upcoming events' : 'No past events'}
-            </Text>
-          </View>
+          <EmptyState
+            icon="📅"
+            title={filter === 'upcoming' ? 'No upcoming events' : 'No past events'}
+            description={
+              filter === 'upcoming'
+                ? 'Check back soon for new events, or create one yourself!'
+                : 'Past events will appear here'
+            }
+            actionLabel={filter === 'upcoming' && profile?.status === 'approved' ? 'Create Event' : undefined}
+            onAction={filter === 'upcoming' && profile?.status === 'approved' ? () => router.push('/event-create') : undefined}
+          />
         }
       />
 

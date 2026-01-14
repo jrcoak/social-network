@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TextInput, TouchableOpacity, FlatList } from 'r
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import { LoadingSpinner, Avatar, Badge, TabBar } from '@/components/ui';
+import { LoadingSpinner, Avatar, Badge, TabBar, EmptyState } from '@/components/ui';
 import type { Profile } from '@/types';
 
 export default function Directory() {
@@ -167,13 +167,15 @@ export default function Directory() {
         renderItem={renderMember}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={
-          <View className="flex-1 justify-center items-center p-8">
-            <Text className="text-gray-500 text-center">
-              {searchQuery || selectedState
-                ? 'No members found matching your filters'
-                : 'No members yet'}
-            </Text>
-          </View>
+          <EmptyState
+            icon="🔍"
+            title={searchQuery || selectedState ? 'No members found' : 'No members yet'}
+            description={
+              searchQuery || selectedState
+                ? 'Try adjusting your search or filters'
+                : 'Members will appear here once they are approved'
+            }
+          />
         }
       />
       <TabBar />

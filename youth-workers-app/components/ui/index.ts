@@ -7,3 +7,4 @@ export { Modal } from './Modal';
 export { LoadingSpinner } from './LoadingSpinner';
 export { Select } from './Select';
 export { TabBar } from './TabBar';
+export { EmptyState } from './EmptyState';
