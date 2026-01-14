@@ -51,11 +51,14 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   signIn: async () => {
     try {
       set({ loading: true });
-      console.log('🚀 Starting Google OAuth, redirect to:', window.location.origin);
+      // Use the sign-in page as the redirect target so hash fragments are preserved
+      const redirectUrl = `${window.location.origin}/(auth)/sign-in`;
+      console.log('🚀 Starting Google OAuth, redirect to:', redirectUrl);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: false,
         },
       });
       console.log('OAuth response:', { data, error });
@@ -162,32 +165,59 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       }
 
       console.log('🔍 Checking for existing session...');
+      console.log('📍 Current URL:', window.location.href);
+      console.log('📍 Hash:', window.location.hash);
+      console.log('📍 Search:', window.location.search);
       
-      // Check if we have OAuth callback params in URL
+      // Check if we have OAuth callback params in URL hash
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const hasOAuthParams = hashParams.has('access_token') || hashParams.has('error');
-      
-      if (hasOAuthParams) {
-        console.log('🔗 OAuth callback detected in URL, exchanging for session...');
-      }
-      
-      // Add timeout to getSession to prevent hanging
-      const sessionPromise = supabase.auth.getSession();
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Session check timeout')), 5000)
-      );
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      const tokenType = hashParams.get('token_type');
       
       let session = null;
-      try {
-        const { data, error: sessionError } = await Promise.race([sessionPromise, timeoutPromise]) as any;
-        
-        if (sessionError) {
-          console.error('❌ Error getting session:', sessionError);
-        } else {
-          session = data?.session;
+      
+      // If we have OAuth tokens in the hash, manually set the session
+      if (accessToken && refreshToken) {
+        console.log('🔗 OAuth callback detected with tokens, setting session...');
+        try {
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+          
+          if (error) {
+            console.error('❌ Error setting session from OAuth tokens:', error);
+          } else {
+            console.log('✅ Session set from OAuth tokens:', data.session?.user?.email);
+            session = data.session;
+            
+            // Clean up the URL hash
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        } catch (error) {
+          console.error('❌ Exception setting session:', error);
         }
-      } catch (timeoutError) {
-        console.warn('⚠️ Session check timed out, continuing without session');
+      } else {
+        console.log('❌ No OAuth tokens found in URL hash');
+        
+        // Try to get existing session
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Session check timeout')), 5000)
+        );
+        
+        try {
+          const { data, error: sessionError } = await Promise.race([sessionPromise, timeoutPromise]) as any;
+          
+          if (sessionError) {
+            console.error('❌ Error getting session:', sessionError);
+          } else {
+            session = data?.session;
+          }
+        } catch (timeoutError) {
+          console.warn('⚠️ Session check timed out, continuing without session');
+        }
       }
       
       if (session) {
