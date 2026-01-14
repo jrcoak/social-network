@@ -29,10 +29,10 @@ module.exports = {
         sans: ['Segoe UI', '-apple-system', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'sm': '0 1.6px 3.6px 0 rgba(0,0,0,.132), 0 0.3px 0.9px 0 rgba(0,0,0,.108)',
-        'md': '0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108)',
-        'lg': '0 6.4px 14.4px 0 rgba(0,0,0,.132), 0 1.2px 3.6px 0 rgba(0,0,0,.108)',
-        'xl': '0 25.6px 57.6px 0 rgba(0,0,0,.22), 0 4.8px 14.4px 0 rgba(0,0,0,.18)',
+        'sm': '0 1px 2px 0 rgba(0,0,0,0.1)',
+        'md': '0 2px 4px 0 rgba(0,0,0,0.12)',
+        'lg': '0 4px 8px 0 rgba(0,0,0,0.15)',
+        'xl': '0 8px 16px 0 rgba(0,0,0,0.2)',
       },
       borderRadius: {
         DEFAULT: '4px',
