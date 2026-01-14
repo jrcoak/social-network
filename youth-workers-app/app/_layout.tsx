@@ -33,7 +33,7 @@ function RootLayoutContent() {
     const timeout = setTimeout(() => {
       console.warn('⚠️ Initialization timeout - forcing app to load');
       useAuthStore.setState({ initialized: true, loading: false });
-    }, 10000); // 10 second timeout
+    }, 7000); // 7 second timeout (gives 5s for auth + 2s buffer)
     
     return () => clearTimeout(timeout);
   }, []);

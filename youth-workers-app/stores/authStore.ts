@@ -162,11 +162,24 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       }
 
       console.log('🔍 Checking for existing session...');
-      // Get initial session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      if (sessionError) {
-        console.error('❌ Error getting session:', sessionError);
+      // Add timeout to getSession to prevent hanging
+      const sessionPromise = supabase.auth.getSession();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Session check timeout')), 5000)
+      );
+      
+      let session = null;
+      try {
+        const { data, error: sessionError } = await Promise.race([sessionPromise, timeoutPromise]) as any;
+        
+        if (sessionError) {
+          console.error('❌ Error getting session:', sessionError);
+        } else {
+          session = data?.session;
+        }
+      } catch (timeoutError) {
+        console.warn('⚠️ Session check timed out, continuing without session');
       }
       
       if (session) {
@@ -180,8 +193,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       // Fetch profile and roles if user exists
       if (session?.user) {
         console.log('👤 Fetching profile and roles...');
-        await Promise.all([get().fetchProfile(), get().fetchRoles()]);
-        console.log('✅ Profile loaded:', get().profile?.email);
+        try {
+          await Promise.race([
+            Promise.all([get().fetchProfile(), get().fetchRoles()]),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Profile fetch timeout')), 5000))
+          ]);
+          console.log('✅ Profile loaded:', get().profile?.email);
+        } catch (error) {
+          console.warn('⚠️ Profile fetch timed out or failed:', error);
+        }
       }
 
       // Listen for auth changes
@@ -192,8 +212,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
         if (session?.user) {
           console.log('✅ User signed in, fetching profile...');
-          await Promise.all([get().fetchProfile(), get().fetchRoles()]);
-          console.log('✅ Profile loaded:', get().profile?.email);
+          try {
+            await Promise.all([get().fetchProfile(), get().fetchRoles()]);
+            console.log('✅ Profile loaded:', get().profile?.email);
+          } catch (error) {
+            console.error('❌ Error fetching profile after sign in:', error);
+          }
         } else {
           console.log('ℹ️ No user session');
           set({ profile: null, roles: [] });
@@ -204,6 +228,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       set({ initialized: true });
     } catch (error) {
       console.error('❌ Initialize auth error:', error);
+      // Even if there's an error, mark as initialized so app doesn't hang
+      set({ initialized: true });
     } finally {
       set({ loading: false });
     }
