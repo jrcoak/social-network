@@ -5,6 +5,26 @@
 -- SCHEMA UPDATES
 -- ============================================================================
 
+-- Migration: Remove birthday fields (2024-01-14)
+DO $$
+BEGIN
+  -- Remove birthday columns if they exist
+  IF EXISTS (SELECT 1 FROM information_schema.columns 
+             WHERE table_name='profiles' AND column_name='birth_month') THEN
+    ALTER TABLE public.profiles DROP COLUMN birth_month;
+  END IF;
+  
+  IF EXISTS (SELECT 1 FROM information_schema.columns 
+             WHERE table_name='profiles' AND column_name='birth_day') THEN
+    ALTER TABLE public.profiles DROP COLUMN birth_day;
+  END IF;
+  
+  IF EXISTS (SELECT 1 FROM information_schema.columns 
+             WHERE table_name='profiles' AND column_name='birth_year') THEN
+    ALTER TABLE public.profiles DROP COLUMN birth_year;
+  END IF;
+END $$;
+
 -- Add missing columns to events table (if they don't exist)
 DO $$ 
 BEGIN

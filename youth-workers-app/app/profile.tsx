@@ -25,6 +25,9 @@ export default function Profile() {
         <ProfileDetails profile={profile} canViewPrivate />
 
         <View className="p-4 gap-3">
+          <Button onPress={() => router.push('/connections')}>
+            My Connections
+          </Button>
           {isAdmin && (
             <Button onPress={() => router.push('/admin')}>
               Admin Panel
