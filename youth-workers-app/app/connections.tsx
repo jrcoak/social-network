@@ -86,7 +86,7 @@ export default function Connections() {
   };
 
   const renderConnection = ({ item }: { item: Connection }) => (
-    <View className="flex-row items-center p-4 border-b border-gray-200 bg-white">
+    <View className="flex-row items-center p-4 mb-2 mx-4 bg-white rounded-xl shadow-soft border border-gray-100">
       <Avatar
         name={`${item.profiles.first_name} ${item.profiles.last_name}`}
         imageUrl={item.profiles.profile_picture_url}
@@ -130,9 +130,9 @@ export default function Connections() {
   }
 
   return (
-    <View className="flex-1 bg-white">
-      <View className="px-4 pt-12 pb-4 border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900 mb-4">Connections</Text>
+    <View className="flex-1 bg-gray-50">
+      <View className="px-4 pt-12 pb-4 bg-white border-b border-gray-200 shadow-soft">
+        <Text className="text-2xl font-bold text-gray-900 mb-4">🤝 Connections</Text>
 
         <View className="flex-row gap-2">
           <TouchableOpacity
