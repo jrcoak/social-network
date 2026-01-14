@@ -95,19 +95,32 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   fetchProfile: async () => {
     const { user } = get();
-    if (!user) return;
+    if (!user) {
+      console.log('⚠️ Cannot fetch profile: no user');
+      return;
+    }
 
     try {
+      console.log('🔍 Fetching profile for user:', user.id);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error fetching profile:', error);
+        // If profile doesn't exist, it might be a new user
+        if (error.code === 'PGRST116') {
+          console.log('ℹ️ Profile not found - new user needs onboarding');
+        }
+        throw error;
+      }
+      
+      console.log('✅ Profile fetched successfully:', data.email);
       set({ profile: data });
     } catch (error) {
-      console.error('Fetch profile error:', error);
+      console.error('❌ Fetch profile error:', error);
     }
   },
 
@@ -130,6 +143,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   initialize: async () => {
     try {
+      console.log('🔄 Initializing auth...');
       set({ loading: true });
       
       // Use mock data when Supabase is not configured
@@ -147,16 +161,31 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         return;
       }
 
+      console.log('🔍 Checking for existing session...');
       // Get initial session
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error('❌ Error getting session:', sessionError);
+      }
+      
+      if (session) {
+        console.log('✅ Found existing session for:', session.user.email);
+      } else {
+        console.log('ℹ️ No existing session found');
+      }
+      
       set({ session, user: session?.user || null });
 
       // Fetch profile and roles if user exists
       if (session?.user) {
+        console.log('👤 Fetching profile and roles...');
         await Promise.all([get().fetchProfile(), get().fetchRoles()]);
+        console.log('✅ Profile loaded:', get().profile?.email);
       }
 
       // Listen for auth changes
+      console.log('👂 Setting up auth state listener...');
       supabase.auth.onAuthStateChange(async (event, session) => {
         console.log('🔐 Auth state changed:', event, 'User:', session?.user?.email);
         set({ session, user: session?.user || null });
@@ -164,16 +193,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         if (session?.user) {
           console.log('✅ User signed in, fetching profile...');
           await Promise.all([get().fetchProfile(), get().fetchRoles()]);
-          console.log('Profile loaded:', get().profile);
+          console.log('✅ Profile loaded:', get().profile?.email);
         } else {
-          console.log('❌ No user session');
+          console.log('ℹ️ No user session');
           set({ profile: null, roles: [] });
         }
       });
 
+      console.log('✅ Auth initialization complete');
       set({ initialized: true });
     } catch (error) {
-      console.error('Initialize auth error:', error);
+      console.error('❌ Initialize auth error:', error);
     } finally {
       set({ loading: false });
     }

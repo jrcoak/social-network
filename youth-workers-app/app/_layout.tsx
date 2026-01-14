@@ -26,12 +26,24 @@ function RootLayoutContent() {
   const { initialize, initialized, loading } = useAuthStore();
 
   useEffect(() => {
+    console.log('🚀 App starting...');
     initialize();
+    
+    // Timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      console.warn('⚠️ Initialization timeout - forcing app to load');
+      useAuthStore.setState({ initialized: true, loading: false });
+    }, 10000); // 10 second timeout
+    
+    return () => clearTimeout(timeout);
   }, []);
 
   if (!initialized || loading) {
+    console.log('⏳ App loading...', { initialized, loading });
     return <LoadingSpinner fullScreen text="Initializing..." />;
   }
+  
+  console.log('✅ App initialized, rendering routes');
 
   return (
     <>
