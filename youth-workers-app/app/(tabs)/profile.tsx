@@ -1,6 +1,6 @@
 import { View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button, LoadingSpinner } from '@/components/ui';
+import { Button, LoadingSpinner, TabBar } from '@/components/ui';
 import { ProfileHeader, ProfileDetails } from '@/components/profile';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -14,7 +14,7 @@ export default function Profile() {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView>
+      <ScrollView className="flex-1">
         <ProfileHeader
           profile={profile}
           isOwnProfile
@@ -37,6 +37,7 @@ export default function Profile() {
           </Button>
         </View>
       </ScrollView>
+      <TabBar showAdminTab={isAdmin} />
     </View>
   );
 }

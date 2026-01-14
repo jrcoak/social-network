@@ -2,11 +2,13 @@ import { View, Text, ScrollView, TextInput, TouchableOpacity, FlatList } from 'r
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import { LoadingSpinner, Avatar, Badge } from '@/components/ui';
+import { LoadingSpinner, Avatar, Badge, TabBar } from '@/components/ui';
+import { useAuth } from '@/hooks/useAuth';
 import type { Profile } from '@/types';
 
 export default function Directory() {
   const router = useRouter();
+  const { profile } = useAuth();
   const [members, setMembers] = useState<Profile[]>([]);
   const [filteredMembers, setFilteredMembers] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -159,6 +161,7 @@ export default function Directory() {
           </View>
         }
       />
+      <TabBar showAdminTab={profile?.role === 'admin'} />
     </View>
   );
 }

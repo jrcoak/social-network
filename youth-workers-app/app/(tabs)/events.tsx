@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner, Badge, Button } from '@/components/ui';
+import { LoadingSpinner, Badge, Button, TabBar } from '@/components/ui';
 import type { Database } from '@/types/database.types';
 
 type Event = Database['public']['Tables']['events']['Row'] & {
@@ -267,12 +267,13 @@ export default function Events() {
 
       {/* Create event button */}
       {profile?.status === 'approved' && (
-        <View className="p-4 bg-white border-t border-gray-200">
+        <View className="p-4 bg-white border-t border-instagram-border">
           <Button onPress={() => console.log('Create event')}>
             Create Event
           </Button>
         </View>
       )}
+      <TabBar showAdminTab={profile?.role === 'admin'} />
     </View>
   );
 }

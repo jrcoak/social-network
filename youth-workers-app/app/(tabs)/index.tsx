@@ -1,18 +1,19 @@
 import { View, Text, ScrollView } from 'react-native';
-import { Card } from '@/components/ui';
+import { Card, TabBar } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function Home() {
   const { profile } = useAuth();
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="px-4 pt-12 pb-4 border-b border-instagram-border">
-        <Text className="text-2xl font-bold text-black">
-          Youth Workers NE
-        </Text>
-      </View>
+    <View className="flex-1 bg-white">
+      <ScrollView className="flex-1">
+        {/* Header */}
+        <View className="px-4 pt-12 pb-4 border-b border-instagram-border">
+          <Text className="text-2xl font-bold text-black">
+            Youth Workers NE
+          </Text>
+        </View>
 
       <View className="p-4 gap-4">
         {/* Welcome */}
@@ -73,7 +74,9 @@ export default function Home() {
             <Text className="text-sm text-gray-700">• Check out upcoming events</Text>
           </View>
         </View>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+      <TabBar showAdminTab={profile?.role === 'admin'} />
+    </View>
   );
 }

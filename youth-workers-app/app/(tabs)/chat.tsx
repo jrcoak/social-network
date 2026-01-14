@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, FlatList, TextInput, Keyboard
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner, Avatar } from '@/components/ui';
+import { LoadingSpinner, Avatar, TabBar } from '@/components/ui';
 import type { Database } from '@/types/database.types';
 
 type Channel = Database['public']['Tables']['channels']['Row'];
@@ -269,6 +269,7 @@ export default function Chat() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <TabBar showAdminTab={profile?.status === 'approved'} />
     </View>
   );
 }

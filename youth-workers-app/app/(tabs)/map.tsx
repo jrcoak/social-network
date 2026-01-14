@@ -1,9 +1,13 @@
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
+import Mapbox from '@rnmapbox/maps';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner, Avatar, Badge } from '@/components/ui';
+import { LoadingSpinner, Avatar, Badge, TabBar } from '@/components/ui';
 import type { Profile } from '@/types';
+
+// Initialize Mapbox
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_TOKEN || '');
 
 export default function Map() {
   const { profile } = useAuth();
@@ -65,12 +69,15 @@ export default function Map() {
     );
   }
 
+  // Calculate center of New England
+  const newEnglandCenter = [-71.5, 43.5]; // Approximate center
+  
   return (
     <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="px-4 pt-12 pb-4 border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900 mb-2">Member Map</Text>
-        <Text className="text-sm text-gray-600 mb-4">
+      <View className="px-4 pt-12 pb-3 border-b border-instagram-border bg-white">
+        <Text className="text-xl font-bold text-black mb-2">Member Map</Text>
+        <Text className="text-xs text-gray-500 mb-3">
           Locations are fuzzed for privacy (±5-10 miles)
         </Text>
 
@@ -81,14 +88,14 @@ export default function Map() {
           className="-mx-4 px-4"
         >
           <TouchableOpacity
-            className={`px-4 py-2 rounded-full mr-2 border-2 ${
-              !selectedState ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
+            className={`px-4 py-1.5 rounded-lg mr-2 border ${
+              !selectedState ? 'bg-black border-black' : 'bg-white border-instagram-border'
             }`}
             onPress={() => setSelectedState(null)}
           >
             <Text
-              className={`text-sm font-medium ${
-                !selectedState ? 'text-neutral-700' : 'text-neutral-600'
+              className={`text-xs font-semibold ${
+                !selectedState ? 'text-white' : 'text-black'
               }`}
             >
               All States
@@ -97,14 +104,14 @@ export default function Map() {
           {states.map((state) => (
             <TouchableOpacity
               key={state}
-              className={`px-4 py-2 rounded-full mr-2 border-2 ${
-                selectedState === state ? 'bg-neutral-200 border-primary' : 'bg-white border-neutral-300'
+              className={`px-4 py-1.5 rounded-lg mr-2 border ${
+                selectedState === state ? 'bg-black border-black' : 'bg-white border-instagram-border'
               }`}
               onPress={() => setSelectedState(state)}
             >
               <Text
-                className={`text-sm font-medium ${
-                  selectedState === state ? 'text-neutral-700' : 'text-neutral-600'
+                className={`text-xs font-semibold ${
+                  selectedState === state ? 'text-white' : 'text-black'
                 }`}
               >
                 {state} ({membersByState[state]?.length || 0})
@@ -114,54 +121,109 @@ export default function Map() {
         </ScrollView>
       </View>
 
-      {/* Map placeholder - would integrate Mapbox here */}
-      <View className="h-64 bg-gradient-to-br from-primary-100 to-purple-100 border-b border-gray-200 items-center justify-center">
-        <View className="w-16 h-16 bg-white rounded-2xl mb-4" />
-        <Text className="text-gray-700 font-semibold text-center px-4">
-          Interactive map coming soon{'\n'}
-          <Text className="text-sm text-gray-500 font-normal">(Requires Mapbox integration)</Text>
-        </Text>
+      {/* Mapbox Map */}
+      <View className="flex-1">
+        <Mapbox.MapView
+          style={{ flex: 1 }}
+          styleURL="mapbox://styles/mapbox/light-v11"
+          zoomEnabled={true}
+          scrollEnabled={true}
+          pitchEnabled={false}
+          rotateEnabled={false}
+        >
+          <Mapbox.Camera
+            zoomLevel={7}
+            centerCoordinate={newEnglandCenter}
+            animationMode="flyTo"
+            animationDuration={1000}
+          />
+
+          {/* Member markers with clustering */}
+          <Mapbox.ShapeSource
+            id="members"
+            cluster
+            clusterRadius={50}
+            clusterMaxZoomLevel={14}
+            shape={{
+              type: 'FeatureCollection',
+              features: filteredMembers
+                .filter((member) => member.location)
+                .map((member) => {
+                  const coords = member.location!
+                    .replace('POINT(', '')
+                    .replace(')', '')
+                    .split(' ')
+                    .map(Number);
+
+                  if (coords.length !== 2 || isNaN(coords[0]) || isNaN(coords[1])) {
+                    return null;
+                  }
+
+                  return {
+                    type: 'Feature',
+                    properties: {
+                      id: member.id,
+                      name: `${member.first_name} ${member.last_name}`,
+                      initials: `${member.first_name[0]}${member.last_name[0]}`,
+                      organization: member.organization_name,
+                      city: member.organization_city,
+                      state: member.organization_state,
+                    },
+                    geometry: {
+                      type: 'Point',
+                      coordinates: coords,
+                    },
+                  };
+                })
+                .filter(Boolean) as any,
+            }}
+          >
+            {/* Cluster circles */}
+            <Mapbox.CircleLayer
+              id="clusters"
+              filter={['has', 'point_count']}
+              style={{
+                circleColor: '#0095F6',
+                circleRadius: 20,
+                circleOpacity: 0.9,
+              }}
+            />
+
+            {/* Cluster count */}
+            <Mapbox.SymbolLayer
+              id="cluster-count"
+              filter={['has', 'point_count']}
+              style={{
+                textField: ['get', 'point_count_abbreviated'],
+                textSize: 12,
+                textColor: '#ffffff',
+                textFont: ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+              }}
+            />
+
+            {/* Individual markers */}
+            <Mapbox.CircleLayer
+              id="member-points"
+              filter={['!', ['has', 'point_count']]}
+              style={{
+                circleColor: '#0095F6',
+                circleRadius: 8,
+                circleStrokeWidth: 2,
+                circleStrokeColor: '#ffffff',
+              }}
+            />
+          </Mapbox.ShapeSource>
+        </Mapbox.MapView>
+
+        {/* Member count overlay */}
+        <View className="absolute bottom-4 left-4 bg-white border border-instagram-border rounded-lg px-3 py-2">
+          <Text className="text-xs font-semibold text-black">
+            {filteredMembers.length} {filteredMembers.length === 1 ? 'member' : 'members'}
+          </Text>
+        </View>
       </View>
 
-      {/* Members list */}
-      <ScrollView className="flex-1">
-        <View className="p-4">
-          <Text className="text-lg font-semibold text-gray-900 mb-3">
-            {selectedState ? `Members in ${selectedState}` : 'All Members'} ({filteredMembers.length})
-          </Text>
-          
-          {filteredMembers.map((member) => (
-            <View
-              key={member.id}
-              className="flex-row items-center p-3 bg-white border border-gray-200 rounded-lg mb-2"
-            >
-              <Avatar
-                name={`${member.first_name} ${member.last_name}`}
-                imageUrl={member.profile_picture_url}
-                size="sm"
-              />
-              <View className="flex-1 ml-3">
-                <Text className="text-base font-semibold text-gray-900">
-                  {member.first_name} {member.last_name}
-                </Text>
-                <Text className="text-sm text-gray-600">{member.organization_name}</Text>
-                <Text className="text-sm text-gray-500">
-                  {member.organization_city}, {member.organization_state}
-                </Text>
-              </View>
-              <Badge variant="secondary">{member.organization_state}</Badge>
-            </View>
-          ))}
-
-          {filteredMembers.length === 0 && (
-            <View className="py-8">
-              <Text className="text-gray-500 text-center">
-                No members found in this area
-              </Text>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+      <TabBar showAdminTab={profile?.role === 'admin'} />
     </View>
   );
 }
