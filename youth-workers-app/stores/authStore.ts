@@ -163,6 +163,14 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
       console.log('🔍 Checking for existing session...');
       
+      // Check if we have OAuth callback params in URL
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const hasOAuthParams = hashParams.has('access_token') || hashParams.has('error');
+      
+      if (hasOAuthParams) {
+        console.log('🔗 OAuth callback detected in URL, exchanging for session...');
+      }
+      
       // Add timeout to getSession to prevent hanging
       const sessionPromise = supabase.auth.getSession();
       const timeoutPromise = new Promise((_, reject) => 
