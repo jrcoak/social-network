@@ -2,6 +2,10 @@ import { create } from 'zustand';
 import type { User as SupabaseUser, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import type { Profile, UserRole } from '@/types';
+import { MOCK_PROFILE, MOCK_USER, MOCK_SESSION } from '@/lib/mockData';
+
+// Enable preview mode to see the app without Supabase
+const PREVIEW_MODE = !process.env.EXPO_PUBLIC_SUPABASE_URL || process.env.EXPO_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co';
 
 interface AuthState {
   user: SupabaseUser | null;
@@ -128,6 +132,20 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   initialize: async () => {
     try {
       set({ loading: true });
+
+      // Use mock data in preview mode
+      if (PREVIEW_MODE) {
+        console.log('🎭 Preview Mode: Using mock authentication data');
+        set({
+          user: MOCK_USER as any,
+          session: MOCK_SESSION as any,
+          profile: MOCK_PROFILE,
+          roles: [{ id: 'mock-role', user_id: 'mock-user-id', role: 'user', granted_at: new Date().toISOString(), granted_by: null }],
+          initialized: true,
+          loading: false,
+        });
+        return;
+      }
 
       // Get initial session
       const { data: { session } } = await supabase.auth.getSession();

@@ -1,11 +1,26 @@
 import '../global.css';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
+import { View, Text } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
 import { LoadingSpinner } from '@/components/ui';
 
 const queryClient = new QueryClient();
+
+const PREVIEW_MODE = !process.env.EXPO_PUBLIC_SUPABASE_URL || process.env.EXPO_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co';
+
+function PreviewModeBanner() {
+  if (!PREVIEW_MODE) return null;
+  
+  return (
+    <View className="bg-yellow-500 px-4 py-2">
+      <Text className="text-center text-sm font-semibold text-yellow-900">
+        🎭 Preview Mode - Using Mock Data (Configure Supabase to enable real authentication)
+      </Text>
+    </View>
+  );
+}
 
 function RootLayoutContent() {
   const { initialize, initialized, loading } = useAuthStore();
@@ -19,17 +34,20 @@ function RootLayoutContent() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="(modals)" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="admin" />
-    </Stack>
+    <>
+      <PreviewModeBanner />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(modals)" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="admin" />
+      </Stack>
+    </>
   );
 }
 
