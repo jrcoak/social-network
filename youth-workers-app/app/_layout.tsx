@@ -27,13 +27,18 @@ function RootLayoutContent() {
 
   useEffect(() => {
     console.log('🚀 App starting...');
-    initialize();
     
-    // Timeout to prevent infinite loading
+    // Shorter timeout for faster loading in problematic environments
     const timeout = setTimeout(() => {
       console.warn('⚠️ Initialization timeout - forcing app to load');
       useAuthStore.setState({ initialized: true, loading: false });
-    }, 7000); // 7 second timeout (gives 5s for auth + 2s buffer)
+    }, 3000); // 3 second timeout for faster recovery
+    
+    initialize().catch((error) => {
+      console.error('❌ Initialization failed:', error);
+      // Force load even on error
+      useAuthStore.setState({ initialized: true, loading: false });
+    });
     
     return () => clearTimeout(timeout);
   }, []);

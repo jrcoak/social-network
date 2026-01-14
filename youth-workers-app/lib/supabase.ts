@@ -18,5 +18,11 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
+    flowType: 'pkce', // Use PKCE flow for better security and compatibility
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'youth-workers-ne-web',
+    },
   },
 });
