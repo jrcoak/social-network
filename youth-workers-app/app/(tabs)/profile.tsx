@@ -13,7 +13,7 @@ export default function Profile() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-white">
       <ScrollView>
         <ProfileHeader
           profile={profile}
@@ -26,7 +26,7 @@ export default function Profile() {
 
         <ProfileDetails profile={profile} canViewPrivate />
 
-        <View className="p-4 gap-3">
+        <View className="p-4 gap-2 border-t border-instagram-border">
           {isAdmin && (
             <Button onPress={() => router.push('/admin')}>
               Admin Panel

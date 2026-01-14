@@ -17,33 +17,33 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'rounded items-center justify-center flex-row';
+  const baseClasses = 'rounded-lg items-center justify-center flex-row';
   
   const variantClasses = {
-    primary: 'bg-primary active:bg-primary-dark shadow-sm',
-    secondary: 'bg-neutral-100 active:bg-neutral-200 border border-neutral-300',
-    outline: 'border border-neutral-400 bg-transparent active:bg-neutral-100',
-    ghost: 'bg-transparent active:bg-neutral-100',
-    danger: 'bg-red-600 active:bg-red-700 shadow-sm',
+    primary: 'bg-instagram-blue active:opacity-80',
+    secondary: 'bg-white active:bg-gray-50 border border-instagram-border',
+    outline: 'border border-instagram-border bg-transparent active:bg-gray-50',
+    ghost: 'bg-transparent active:bg-gray-50',
+    danger: 'bg-red-500 active:opacity-80',
   };
   
   const sizeClasses = {
     sm: 'px-4 py-1.5',
-    md: 'px-5 py-2',
-    lg: 'px-6 py-2.5',
+    md: 'px-6 py-2',
+    lg: 'px-8 py-3',
   };
   
   const textVariantClasses = {
     primary: 'text-white font-semibold',
-    secondary: 'text-neutral-900 font-semibold',
-    outline: 'text-neutral-900 font-semibold',
-    ghost: 'text-neutral-700 font-semibold',
+    secondary: 'text-black font-semibold',
+    outline: 'text-black font-semibold',
+    ghost: 'text-instagram-blue font-semibold',
     danger: 'text-white font-semibold',
   };
   
   const textSizeClasses = {
     sm: 'text-sm',
-    md: 'text-base',
+    md: 'text-sm',
     lg: 'text-base',
   };
   

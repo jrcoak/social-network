@@ -164,11 +164,11 @@ export default function Chat() {
             </Text>
           )}
           <View
-            className={`px-4 py-2 rounded-2xl ${
-              isOwnMessage ? 'bg-primary' : 'bg-gray-200'
+            className={`px-4 py-2.5 rounded-3xl ${
+              isOwnMessage ? 'bg-instagram-blue' : 'border border-instagram-border'
             }`}
           >
-            <Text className={isOwnMessage ? 'text-white' : 'text-gray-900'}>
+            <Text className={`text-sm ${isOwnMessage ? 'text-white' : 'text-black'}`}>
               {item.content}
             </Text>
           </View>
@@ -201,22 +201,22 @@ export default function Chat() {
   return (
     <View className="flex-1 bg-white">
       {/* Header with channel selector */}
-      <View className="px-4 pt-12 pb-4 border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900 mb-3">Chat</Text>
+      <View className="px-4 pt-12 pb-3 border-b border-instagram-border">
+        <Text className="text-xl font-bold text-black mb-3">Chat</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {channels.map((channel) => (
             <TouchableOpacity
               key={channel.id}
-              className={`px-4 py-2 rounded-full mr-2 border-2 ${
+              className={`px-4 py-1.5 rounded-lg mr-2 border ${
                 selectedChannel?.id === channel.id 
-                  ? 'bg-neutral-200 border-primary' 
-                  : 'bg-white border-neutral-300'
+                  ? 'bg-black border-black' 
+                  : 'bg-white border-instagram-border'
               }`}
               onPress={() => setSelectedChannel(channel)}
             >
               <Text
-                className={`text-sm font-medium ${
-                  selectedChannel?.id === channel.id ? 'text-neutral-700' : 'text-neutral-600'
+                className={`text-xs font-semibold ${
+                  selectedChannel?.id === channel.id ? 'text-white' : 'text-black'
                 }`}
               >
                 #{channel.name}
@@ -248,23 +248,24 @@ export default function Chat() {
         />
 
         {/* Message input */}
-        <View className="flex-row items-center p-4 border-t border-gray-200">
+        <View className="flex-row items-center px-4 py-3 border-t border-instagram-border">
           <TextInput
-            className="flex-1 bg-gray-100 rounded-full px-4 py-3 text-base mr-2"
-            placeholder="Type a message..."
+            className="flex-1 border border-instagram-border rounded-full px-4 py-2 text-sm mr-2"
+            placeholder="Message..."
             value={newMessage}
             onChangeText={setNewMessage}
             multiline
             maxLength={1000}
           />
           <TouchableOpacity
-            className={`w-12 h-12 rounded-full items-center justify-center ${
-              newMessage.trim() && !sending ? 'bg-primary' : 'bg-gray-300'
-            }`}
             onPress={sendMessage}
             disabled={!newMessage.trim() || sending}
           >
-            <Text className="text-white text-xl">➤</Text>
+            <Text className={`text-sm font-semibold ${
+              newMessage.trim() && !sending ? 'text-instagram-blue' : 'text-gray-300'
+            }`}>
+              Send
+            </Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

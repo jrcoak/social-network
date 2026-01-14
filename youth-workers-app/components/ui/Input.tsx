@@ -16,29 +16,29 @@ export function Input({
   className = '',
   ...props
 }: InputProps) {
-  const inputClasses = `border-b-2 px-3 py-2 text-base bg-white ${
+  const inputClasses = `border border-instagram-border rounded-sm px-3 py-2.5 text-sm bg-instagram-background ${
     error
-      ? 'border-red-600'
-      : 'border-neutral-300 focus:border-primary'
+      ? 'border-red-500'
+      : 'focus:border-gray-400'
   } ${className}`;
 
   return (
     <View className={`${containerClassName}`}>
       {label && (
-        <Text className="text-sm font-semibold text-neutral-900 mb-1">
+        <Text className="text-xs font-semibold text-gray-700 mb-1.5">
           {label}
         </Text>
       )}
       <TextInput
         className={inputClasses}
-        placeholderTextColor="#8A8A8A"
+        placeholderTextColor="#8E8E8E"
         {...props}
       />
       {error && (
-        <Text className="text-xs text-red-600 mt-1">{error}</Text>
+        <Text className="text-xs text-red-500 mt-1">{error}</Text>
       )}
       {helperText && !error && (
-        <Text className="text-xs text-neutral-600 mt-1">{helperText}</Text>
+        <Text className="text-xs text-gray-500 mt-1">{helperText}</Text>
       )}
     </View>
   );
