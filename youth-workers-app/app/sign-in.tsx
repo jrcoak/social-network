@@ -41,18 +41,18 @@ export default function SignIn() {
   }
 
   return (
-    <View className="flex-1 bg-gradient-to-br from-primary-500 via-purple-500 to-purple-600">
-      <View className="flex-1 justify-center items-center px-6">
+    <View className="flex-1 bg-neutral-50">
+      <View className="flex-1 justify-center items-center px-8">
         {/* Logo */}
-        <View className="w-24 h-24 bg-white/20 backdrop-blur-xl rounded-3xl items-center justify-center mb-12 border border-white/30">
-          <View className="w-16 h-16 bg-white rounded-2xl" />
+        <View className="w-16 h-16 bg-primary rounded-lg items-center justify-center mb-8">
+          <View className="w-10 h-10 bg-white rounded" />
         </View>
 
         {/* Title */}
-        <Text className="text-5xl font-bold text-white text-center mb-4">
+        <Text className="text-3xl font-semibold text-neutral-900 text-center mb-2">
           Youth Workers NE
         </Text>
-        <Text className="text-xl text-white/80 text-center mb-16 max-w-md">
+        <Text className="text-base text-neutral-600 text-center mb-12 max-w-md">
           Connect with youth workers across New England
         </Text>
 
@@ -61,16 +61,15 @@ export default function SignIn() {
           <Button
             onPress={handleSignIn}
             loading={loading}
-            className="bg-white"
             size="lg"
           >
-            <Text className="text-primary-600 font-bold text-lg">Sign in with Google</Text>
+            Sign in with Google
           </Button>
         </View>
 
         {/* Info */}
-        <View className="mt-12 max-w-md bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
-          <Text className="text-sm text-white/90 text-center leading-relaxed">
+        <View className="mt-8 max-w-md bg-neutral-100 rounded-lg p-4 border border-neutral-200">
+          <Text className="text-sm text-neutral-700 text-center">
             Your account will be reviewed by an administrator before you can access all features.
           </Text>
         </View>
@@ -78,7 +77,7 @@ export default function SignIn() {
 
       {/* Footer */}
       <View className="pb-8 px-8">
-        <Text className="text-xs text-white/60 text-center">
+        <Text className="text-xs text-neutral-500 text-center">
           By signing in, you agree to our Terms of Service and Privacy Policy
         </Text>
       </View>

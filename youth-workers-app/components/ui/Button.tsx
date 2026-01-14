@@ -17,34 +17,34 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'rounded-2xl items-center justify-center flex-row shadow-lg';
+  const baseClasses = 'rounded items-center justify-center flex-row';
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-primary-500 to-purple-500 active:opacity-90',
-    secondary: 'bg-gray-100 active:bg-gray-200',
-    outline: 'border-2 border-primary-500 bg-transparent active:bg-primary-50',
-    ghost: 'bg-transparent active:bg-gray-100',
-    danger: 'bg-gradient-to-r from-red-500 to-pink-500 active:opacity-90',
+    primary: 'bg-primary active:bg-primary-dark shadow-sm',
+    secondary: 'bg-neutral-100 active:bg-neutral-200 border border-neutral-300',
+    outline: 'border border-neutral-400 bg-transparent active:bg-neutral-100',
+    ghost: 'bg-transparent active:bg-neutral-100',
+    danger: 'bg-red-600 active:bg-red-700 shadow-sm',
   };
   
   const sizeClasses = {
-    sm: 'px-5 py-2.5',
-    md: 'px-6 py-3.5',
-    lg: 'px-8 py-4',
+    sm: 'px-4 py-1.5',
+    md: 'px-5 py-2',
+    lg: 'px-6 py-2.5',
   };
   
   const textVariantClasses = {
-    primary: 'text-white font-bold',
-    secondary: 'text-gray-900 font-bold',
-    outline: 'text-primary-600 font-bold',
-    ghost: 'text-gray-700 font-semibold',
-    danger: 'text-white font-bold',
+    primary: 'text-white font-semibold',
+    secondary: 'text-neutral-900 font-semibold',
+    outline: 'text-neutral-900 font-semibold',
+    ghost: 'text-neutral-700 font-semibold',
+    danger: 'text-white font-semibold',
   };
   
   const textSizeClasses = {
     sm: 'text-sm',
     md: 'text-base',
-    lg: 'text-lg',
+    lg: 'text-base',
   };
   
   const disabledClasses = 'opacity-50';

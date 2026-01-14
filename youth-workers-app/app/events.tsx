@@ -140,7 +140,7 @@ export default function Events() {
     const startDate = new Date(item.start_time);
 
     return (
-      <View className="bg-white rounded-2xl p-5 mx-4 mb-3 shadow-md">
+      <View className="bg-white p-4 border-b border-neutral-100">
         {/* Event header */}
         <View className="flex-row justify-between items-start mb-2">
           <View className="flex-1">
@@ -260,10 +260,10 @@ export default function Events() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-neutral-50">
       {/* Header */}
-      <View className="px-6 pt-14 pb-4 bg-white">
-        <Text className="text-4xl font-bold text-gray-900 mb-4">Events</Text>
+      <View className="px-6 pt-14 pb-4 bg-white shadow-sm">
+        <Text className="text-3xl font-semibold text-neutral-900 mb-4">Events</Text>
         
         {/* Filter tabs */}
         <View className="flex-row gap-2">
