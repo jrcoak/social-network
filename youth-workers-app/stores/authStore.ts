@@ -51,15 +51,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   signIn: async () => {
     try {
       set({ loading: true });
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log('🚀 Starting Google OAuth, redirect to:', window.location.origin);
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: window.location.origin,
         },
       });
+      console.log('OAuth response:', { data, error });
       if (error) throw error;
     } catch (error) {
-      console.error('Sign in error:', error);
+      console.error('❌ Sign in error:', error);
       throw error;
     } finally {
       set({ loading: false });
@@ -156,11 +158,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
       // Listen for auth changes
       supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log('🔐 Auth state changed:', event, 'User:', session?.user?.email);
         set({ session, user: session?.user || null });
 
         if (session?.user) {
+          console.log('✅ User signed in, fetching profile...');
           await Promise.all([get().fetchProfile(), get().fetchRoles()]);
+          console.log('Profile loaded:', get().profile);
         } else {
+          console.log('❌ No user session');
           set({ profile: null, roles: [] });
         }
       });
