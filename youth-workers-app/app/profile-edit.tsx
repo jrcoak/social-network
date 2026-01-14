@@ -1,9 +1,10 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import * as ImagePicker from 'expo-image-picker';
 import { Button, Input, Select, LoadingSpinner } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
@@ -31,6 +32,8 @@ export default function ProfileEdit() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(profile?.profile_picture_url || null);
 
   const {
     control,
@@ -53,6 +56,61 @@ export default function ProfileEdit() {
       hire_year: profile?.hire_year || new Date().getFullYear(),
     },
   });
+
+  const pickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        await uploadImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      alert('Failed to pick image');
+    }
+  };
+
+  const uploadImage = async (uri: string) => {
+    if (!user) return;
+
+    try {
+      setUploading(true);
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const fileExt = uri.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('profile-pictures')
+        .upload(filePath, blob);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('profile-pictures')
+        .getPublicUrl(filePath);
+
+      setProfileImage(publicUrl);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ profile_picture_url: publicUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = async (data: ProfileFormData) => {
     if (!user) return;
@@ -101,6 +159,34 @@ export default function ProfileEdit() {
 
       <ScrollView className="flex-1 px-4 py-6">
         <View className="gap-4">
+          {/* Profile Picture */}
+          <View className="items-center mb-4">
+            <TouchableOpacity
+              onPress={pickImage}
+              disabled={uploading}
+              className="relative"
+            >
+              {profileImage ? (
+                <Image
+                  source={{ uri: profileImage }}
+                  className="w-32 h-32 rounded-full bg-gray-200"
+                />
+              ) : (
+                <View className="w-32 h-32 rounded-full bg-gray-200 items-center justify-center">
+                  <Text className="text-4xl">👤</Text>
+                </View>
+              )}
+              <View className="absolute bottom-0 right-0 bg-primary-600 rounded-full p-2">
+                <Text className="text-white text-xs">
+                  {uploading ? '...' : '📷'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <Text className="text-sm text-gray-600 mt-2">
+              Tap to change photo
+            </Text>
+          </View>
+
           <Controller
             control={control}
             name="first_name"
