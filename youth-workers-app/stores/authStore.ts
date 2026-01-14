@@ -51,8 +51,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   signIn: async () => {
     try {
       set({ loading: true });
-      // Use the sign-in page as the redirect target so hash fragments are preserved
-      const redirectUrl = `${window.location.origin}/(auth)/sign-in`;
+      // Redirect to root - the app will handle routing based on auth state
+      const redirectUrl = window.location.origin;
       console.log('🚀 Starting Google OAuth, redirect to:', redirectUrl);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',

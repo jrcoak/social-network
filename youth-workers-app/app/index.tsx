@@ -3,15 +3,20 @@ import { useAuth } from '@/hooks/useAuth';
 import { LoadingSpinner } from '@/components/ui';
 
 export default function Index() {
-  const { isAuthenticated, loading, initialized } = useAuth();
+  const { isAuthenticated, loading, initialized, profile } = useAuth();
 
   if (!initialized || loading) {
     return <LoadingSpinner fullScreen />;
   }
 
   if (!isAuthenticated) {
-    return <Redirect href="/(auth)/sign-in" />;
+    return <Redirect href="/sign-in" />;
   }
 
-  return <Redirect href="/(tabs)/" />;
+  // Check if profile needs completion (onboarding)
+  if (profile && (!profile.first_name || !profile.last_name || !profile.phone || !profile.bio)) {
+    return <Redirect href="/onboarding" />;
+  }
+
+  return <Redirect href="/chat" />;
 }

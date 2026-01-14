@@ -118,17 +118,18 @@ CREATE TABLE public.direct_messages (
 CREATE TABLE public.events (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  start_date TIMESTAMPTZ NOT NULL,
-  end_date TIMESTAMPTZ,
-  location_type TEXT NOT NULL CHECK (location_type IN ('physical', 'virtual')),
+  description TEXT,
+  start_time TIMESTAMPTZ NOT NULL,
+  end_time TIMESTAMPTZ,
+  event_type TEXT NOT NULL CHECK (event_type IN ('in_person', 'virtual')),
+  location TEXT, -- Combined location string for display
   location_address TEXT,
   location_city TEXT,
   location_state TEXT,
   location_zip TEXT,
   virtual_link TEXT,
-  organizer_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
-  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'submitted', 'approved', 'rejected', 'published')),
+  created_by UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('draft', 'pending', 'approved', 'rejected')),
   admin_notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
@@ -180,7 +181,7 @@ CREATE INDEX idx_profiles_location ON public.profiles USING GIST(location);
 CREATE INDEX idx_messages_channel_created ON public.messages(channel_id, created_at DESC);
 CREATE INDEX idx_messages_user ON public.messages(user_id);
 CREATE INDEX idx_direct_messages_users ON public.direct_messages(from_user_id, to_user_id);
-CREATE INDEX idx_events_status_start ON public.events(status, start_date);
+CREATE INDEX idx_events_status_start ON public.events(status, start_time);
 CREATE INDEX idx_connections_status ON public.connections(user_id, status);
 
 -- ============================================================================
@@ -385,19 +386,19 @@ CREATE POLICY "Users can delete their own connections" ON public.connections
 
 -- Events policies
 CREATE POLICY "Approved users can view approved events" ON public.events
-  FOR SELECT USING (is_approved_user() AND status IN ('approved', 'published'));
+  FOR SELECT USING (is_approved_user() AND status = 'approved');
 
 CREATE POLICY "Users can view their own events" ON public.events
-  FOR SELECT USING (auth.uid() = organizer_id);
+  FOR SELECT USING (auth.uid() = created_by);
 
 CREATE POLICY "Admins can view all events" ON public.events
   FOR SELECT USING (is_admin_or_mod());
 
 CREATE POLICY "Approved users can create events" ON public.events
-  FOR INSERT WITH CHECK (is_approved_user() AND auth.uid() = organizer_id);
+  FOR INSERT WITH CHECK (is_approved_user() AND auth.uid() = created_by);
 
 CREATE POLICY "Users can update their own events" ON public.events
-  FOR UPDATE USING (auth.uid() = organizer_id);
+  FOR UPDATE USING (auth.uid() = created_by);
 
 CREATE POLICY "Admins can update any event" ON public.events
   FOR UPDATE USING (is_admin_or_mod());
