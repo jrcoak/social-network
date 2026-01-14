@@ -1,3 +1,4 @@
+import { TabBar } from '@/components/ui';
 import { View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button, LoadingSpinner } from '@/components/ui';

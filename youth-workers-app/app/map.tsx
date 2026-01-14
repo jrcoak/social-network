@@ -1,3 +1,4 @@
+import { TabBar } from '@/components/ui';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';

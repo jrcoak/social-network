@@ -1,3 +1,4 @@
+import { TabBar } from '@/components/ui';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
@@ -159,6 +160,7 @@ export default function Directory() {
           </View>
         }
       />
+      <TabBar />
     </View>
   );
 }

@@ -1,8 +1,9 @@
+import { TabBar } from '@/components/ui';
 import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner, Badge, Button } from '@/components/ui';
+import { LoadingSpinner, Badge, Button, TabBar } from '@/components/ui';
 import type { Database } from '@/types/database.types';
 
 type Event = Database['public']['Tables']['events']['Row'] & {
@@ -273,6 +274,7 @@ export default function Events() {
           </Button>
         </View>
       )}
+      <TabBar />
     </View>
   );
 }
