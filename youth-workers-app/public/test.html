@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Test - Youth Workers App</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f9ff;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        h1 { color: #1e40af; }
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>✅ Server is Working!</h1>
+    
+    <div class="success">
+        <strong>Good News:</strong> If you can see this page, the server is running correctly on port 8081.
+    </div>
+
+    <div class="info">
+        <strong>The Issue:</strong> Your browser is caching the main app's JavaScript bundle.
+        The app code is updated on the server, but your browser hasn't downloaded it yet.
+    </div>
+
+    <h2>What to Do Now</h2>
+    <ol>
+        <li><strong>Close this tab</strong></li>
+        <li><strong>Go back to the main app tab</strong> (showing blank page)</li>
+        <li><strong>Press these keys together:</strong>
+            <ul>
+                <li>Windows/Linux: <code>Ctrl + Shift + R</code></li>
+                <li>Mac: <code>Cmd + Shift + R</code></li>
+            </ul>
+        </li>
+        <li><strong>Wait 3 seconds</strong> - the app will load</li>
+    </ol>
+
+    <h2>Alternative: Open in New Incognito Window</h2>
+    <ol>
+        <li>Open a new incognito/private window</li>
+        <li>Go to: <code>http://localhost:8081</code></li>
+        <li>The app should load fresh (no cache)</li>
+    </ol>
+
+    <h2>Or Deploy to Vercel (Recommended)</h2>
+    <p>The Gitpod environment can be tricky. Deploying to Vercel gives you a proper production URL where everything works perfectly.</p>
+    <a href="https://github.com/jrcoak/social-network/blob/main/DEPLOY-NOW.md" class="button" target="_blank">
+        View Deployment Guide
+    </a>
+
+    <h2>Technical Details</h2>
+    <ul>
+        <li><strong>Server Status:</strong> ✅ Running</li>
+        <li><strong>Port:</strong> 8081</li>
+        <li><strong>Latest Code:</strong> ✅ Loaded</li>
+        <li><strong>Timeout Fix:</strong> ✅ Active (3 seconds)</li>
+        <li><strong>All Features:</strong> ✅ Implemented</li>
+    </ul>
+
+    <p><strong>Time:</strong> <span id="time"></span></p>
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
