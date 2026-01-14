@@ -233,10 +233,10 @@ export default function AdminPanel() {
       <Text className="text-sm text-gray-700 mb-3">{item.description}</Text>
 
       {item.location && (
-        <Text className="text-sm text-gray-600 mb-2">📍 {item.location}</Text>
+        <Text className="text-sm text-gray-600 mb-2">{item.location}</Text>
       )}
       {item.virtual_link && (
-        <Text className="text-sm text-gray-600 mb-2">🔗 {item.virtual_link}</Text>
+        <Text className="text-sm text-gray-600 mb-2">{item.virtual_link}</Text>
       )}
 
       <Text className="text-xs text-gray-500 mb-3">

@@ -172,13 +172,13 @@ export default function ProfileEdit() {
                   className="w-32 h-32 rounded-full bg-gray-200"
                 />
               ) : (
-                <View className="w-32 h-32 rounded-full bg-gray-200 items-center justify-center">
-                  <Text className="text-4xl">👤</Text>
+                <View className="w-32 h-32 rounded-full bg-gradient-to-br from-primary-500 to-purple-500 items-center justify-center">
+                  <View className="w-20 h-20 bg-white rounded-full" />
                 </View>
               )}
-              <View className="absolute bottom-0 right-0 bg-primary-600 rounded-full p-2">
-                <Text className="text-white text-xs">
-                  {uploading ? '...' : '📷'}
+              <View className="absolute bottom-0 right-0 bg-primary-600 rounded-full p-3">
+                <Text className="text-white text-xs font-bold">
+                  {uploading ? '...' : '+'}
                 </Text>
               </View>
             </TouchableOpacity>

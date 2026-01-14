@@ -115,10 +115,11 @@ export default function Map() {
       </View>
 
       {/* Map placeholder - would integrate Mapbox here */}
-      <View className="h-64 bg-gray-100 border-b border-gray-200 items-center justify-center">
-        <Text className="text-gray-500 text-center px-4">
-          🗺️ Interactive map coming soon{'\n'}
-          (Requires Mapbox integration)
+      <View className="h-64 bg-gradient-to-br from-primary-100 to-purple-100 border-b border-gray-200 items-center justify-center">
+        <View className="w-16 h-16 bg-white rounded-2xl mb-4" />
+        <Text className="text-gray-700 font-semibold text-center px-4">
+          Interactive map coming soon{'\n'}
+          <Text className="text-sm text-gray-500 font-normal">(Requires Mapbox integration)</Text>
         </Text>
       </View>
 

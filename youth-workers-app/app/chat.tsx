@@ -238,7 +238,6 @@ export default function Chat() {
           contentContainerClassName="p-4"
           ListEmptyComponent={
             <EmptyState
-              icon="💬"
               title="No messages yet"
               description="Be the first to start the conversation in this channel!"
             />

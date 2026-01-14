@@ -43,9 +43,9 @@ export default function SignIn() {
   return (
     <View className="flex-1 bg-white">
       <View className="flex-1 justify-center items-center px-6">
-        {/* Logo/Icon placeholder */}
-        <View className="w-24 h-24 bg-primary-100 rounded-full items-center justify-center mb-8">
-          <Text className="text-4xl">👥</Text>
+        {/* Logo */}
+        <View className="w-24 h-24 bg-gradient-to-br from-primary-500 to-purple-500 rounded-3xl items-center justify-center mb-8">
+          <View className="w-16 h-16 bg-white rounded-2xl" />
         </View>
 
         {/* Title */}

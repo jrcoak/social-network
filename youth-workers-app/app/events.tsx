@@ -166,7 +166,7 @@ export default function Events() {
 
         {/* Location */}
         {item.location && (
-          <Text className="text-sm text-gray-600 mb-2">📍 {item.location}</Text>
+          <Text className="text-sm text-gray-600 mb-2">{item.location}</Text>
         )}
 
         {/* Description */}
@@ -193,8 +193,8 @@ export default function Events() {
           className="mb-3"
           onPress={() => exportToCalendar(item)}
         >
-          <Text className="text-sm text-primary-600 font-medium">
-            📅 Add to Calendar
+          <Text className="text-sm text-primary-600 font-semibold">
+            Add to Calendar
           </Text>
         </TouchableOpacity>
 
@@ -306,7 +306,6 @@ export default function Events() {
         contentContainerClassName="p-4"
         ListEmptyComponent={
           <EmptyState
-            icon="📅"
             title={filter === 'upcoming' ? 'No upcoming events' : 'No past events'}
             description={
               filter === 'upcoming'

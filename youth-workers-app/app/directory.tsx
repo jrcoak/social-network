@@ -168,7 +168,6 @@ export default function Directory() {
         keyExtractor={(item) => item.id}
         ListEmptyComponent={
           <EmptyState
-            icon="🔍"
             title={searchQuery || selectedState ? 'No members found' : 'No members yet'}
             description={
               searchQuery || selectedState
