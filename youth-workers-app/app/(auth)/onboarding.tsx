@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button, Input, Select, LoadingSpinner } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
+import { supabase } from '@/lib/supabase';
 import { NEW_ENGLAND_STATES } from '@/constants/States';
 import { MINISTRY_FOCUS_TAGS } from '@/constants/Roles';
 
@@ -65,14 +67,46 @@ export default function Onboarding() {
 
     try {
       setSubmitting(true);
-      // TODO: Update profile in Supabase
-      console.log('Onboarding data:', data);
+      console.log('📝 Submitting onboarding data...');
       
-      // For now, just navigate to tabs
+      // Update profile in Supabase
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: data.first_name,
+          last_name: data.last_name,
+          phone: data.phone,
+          role_title: data.role_title,
+          organization_name: data.organization_name,
+          organization_address: data.organization_address,
+          organization_city: data.organization_city,
+          organization_state: data.organization_state,
+          organization_zip: data.organization_zip,
+          bio: data.bio,
+          birth_month: data.birth_month,
+          birth_day: data.birth_day,
+          birth_year: data.birth_year,
+          hire_month: data.hire_month,
+          hire_year: data.hire_year,
+          status: 'pending', // Set to pending for admin approval
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('❌ Error updating profile:', error);
+        throw error;
+      }
+
+      console.log('✅ Profile updated successfully');
+      
+      // Refresh profile in store
+      await useAuthStore.getState().fetchProfile();
+      
+      // Navigate to tabs
       router.replace('/(tabs)');
     } catch (error) {
-      console.error('Onboarding error:', error);
-      // TODO: Show error toast
+      console.error('❌ Onboarding error:', error);
+      alert('Failed to save profile. Please try again.');
     } finally {
       setSubmitting(false);
     }
