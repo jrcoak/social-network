@@ -19,10 +19,7 @@ export default function Profile() {
         <ProfileHeader
           profile={profile}
           isOwnProfile
-          onEditPress={() => {
-            // TODO: Navigate to edit profile
-            console.log('Edit profile');
-          }}
+          onEditPress={() => router.push('/profile-edit')}
         />
 
         <ProfileDetails profile={profile} canViewPrivate />

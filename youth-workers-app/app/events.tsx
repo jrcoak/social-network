@@ -1,6 +1,7 @@
 import { TabBar } from '@/components/ui';
 import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { LoadingSpinner, Badge, Button, TabBar } from '@/components/ui';
@@ -18,6 +19,7 @@ type Event = Database['public']['Tables']['events']['Row'] & {
 };
 
 export default function Events() {
+  const router = useRouter();
   const { user, profile } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -269,7 +271,7 @@ export default function Events() {
       {/* Create event button */}
       {profile?.status === 'approved' && (
         <View className="p-4 bg-white border-t border-gray-200">
-          <Button onPress={() => console.log('Create event')}>
+          <Button onPress={() => router.push('/event-create')}>
             Create Event
           </Button>
         </View>
