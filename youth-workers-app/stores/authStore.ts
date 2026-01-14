@@ -5,7 +5,17 @@ import type { Profile, UserRole } from '@/types';
 import { MOCK_PROFILE, MOCK_USER, MOCK_SESSION } from '@/lib/mockData';
 
 // Enable preview mode to see the app without Supabase
-const PREVIEW_MODE = !process.env.EXPO_PUBLIC_SUPABASE_URL || process.env.EXPO_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co';
+// Check if we're using placeholder credentials
+const checkPreviewMode = () => {
+  try {
+    const url = supabase.supabaseUrl;
+    return !url || url === 'https://placeholder.supabase.co' || url.includes('placeholder');
+  } catch {
+    return true;
+  }
+};
+
+const PREVIEW_MODE = checkPreviewMode();
 
 interface AuthState {
   user: SupabaseUser | null;

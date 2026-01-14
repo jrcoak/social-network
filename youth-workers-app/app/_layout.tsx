@@ -8,7 +8,17 @@ import { LoadingSpinner } from '@/components/ui';
 
 const queryClient = new QueryClient();
 
-const PREVIEW_MODE = !process.env.EXPO_PUBLIC_SUPABASE_URL || process.env.EXPO_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co';
+// Check if we're in preview mode by checking Supabase URL
+const checkPreviewMode = () => {
+  try {
+    const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
+    return !url || url === 'https://placeholder.supabase.co' || url.includes('placeholder');
+  } catch {
+    return true;
+  }
+};
+
+const PREVIEW_MODE = checkPreviewMode();
 
 function PreviewModeBanner() {
   if (!PREVIEW_MODE) return null;
