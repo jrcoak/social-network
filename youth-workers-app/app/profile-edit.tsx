@@ -27,6 +27,14 @@ const profileSchema = z.object({
   organization_zip: z.string()
     .regex(/^\d{5}(-\d{4})?$/, 'ZIP code must be 5 digits or 5+4 format (e.g., 12345 or 12345-6789)'),
   bio: z.string().min(20, 'Bio must be at least 20 characters').max(500, 'Bio too long (max 500 characters)'),
+  birthday: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birthday must be in YYYY-MM-DD format')
+    .refine((date) => {
+      const birthDate = new Date(date);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      return age >= 13 && age <= 120;
+    }, 'Must be between 13 and 120 years old'),
   hire_month: z.number().min(1).max(12),
   hire_year: z.number().min(1900).max(new Date().getFullYear()),
 });
@@ -57,6 +65,7 @@ export default function ProfileEdit() {
       organization_state: profile?.organization_state || 'MA',
       organization_zip: profile?.organization_zip || '',
       bio: profile?.bio || '',
+      birthday: profile?.birthday || '',
       hire_month: profile?.hire_month || 1,
       hire_year: profile?.hire_year || new Date().getFullYear(),
     },
@@ -128,6 +137,7 @@ export default function ProfileEdit() {
           first_name: data.first_name,
           last_name: data.last_name,
           phone: data.phone,
+          birthday: data.birthday,
           role_title: data.role_title,
           organization_name: data.organization_name,
           organization_address: data.organization_address,
@@ -228,6 +238,21 @@ export default function ProfileEdit() {
                 onChangeText={onChange}
                 error={errors.phone?.message}
                 keyboardType="phone-pad"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="birthday"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Birthday"
+                value={value}
+                onChangeText={onChange}
+                error={errors.birthday?.message}
+                placeholder="YYYY-MM-DD (e.g., 1990-01-15)"
+                helperText="Must be at least 13 years old"
               />
             )}
           />
