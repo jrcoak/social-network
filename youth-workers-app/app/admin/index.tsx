@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/lib/supabase';
@@ -97,10 +97,10 @@ export default function AdminPanel() {
 
       if (error) throw error;
       await fetchUsers();
-      alert(`User ${approved ? 'approved' : 'rejected'} successfully`);
+      Alert.alert('Success', `User ${approved ? 'approved' : 'rejected'} successfully`);
     } catch (error) {
       console.error('Error updating user status:', error);
-      alert('Failed to update user status');
+      Alert.alert('Error', 'Failed to update user status');
     } finally {
       setProcessing(null);
     }
@@ -119,36 +119,48 @@ export default function AdminPanel() {
 
       if (error) throw error;
       await fetchUsers();
-      alert(`User role updated to ${newRole} successfully`);
+      Alert.alert('Success', `User role updated to ${newRole} successfully`);
     } catch (error) {
       console.error('Error updating user role:', error);
-      alert('Failed to update user role');
+      Alert.alert('Error', 'Failed to update user role');
     } finally {
       setProcessing(null);
     }
   };
 
   const handleDeleteUser = async (userId: string, userName: string) => {
-    if (!confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
-      return;
-    }
+    Alert.alert(
+      'Delete User',
+      `Are you sure you want to delete ${userName}? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setProcessing(userId);
+              const { error } = await supabase
+                .from('profiles')
+                .delete()
+                .eq('id', userId);
 
-    try {
-      setProcessing(userId);
-      const { error } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', userId);
-
-      if (error) throw error;
-      await fetchUsers();
-      alert(`User ${userName} deleted successfully`);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      alert('Failed to delete user');
-    } finally {
-      setProcessing(null);
-    }
+              if (error) throw error;
+              await fetchUsers();
+              Alert.alert('Success', `User ${userName} deleted successfully`);
+            } catch (error) {
+              console.error('Error deleting user:', error);
+              Alert.alert('Error', 'Failed to delete user');
+            } finally {
+              setProcessing(null);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleEventApproval = async (eventId: string, approved: boolean) => {
@@ -163,10 +175,10 @@ export default function AdminPanel() {
 
       if (error) throw error;
       await fetchPendingEvents();
-      alert(`Event ${approved ? 'approved' : 'rejected'} successfully`);
+      Alert.alert('Success', `Event ${approved ? 'approved' : 'rejected'} successfully`);
     } catch (error) {
       console.error('Error updating event status:', error);
-      alert('Failed to update event status');
+      Alert.alert('Error', 'Failed to update event status');
     } finally {
       setProcessing(null);
     }
