@@ -26,7 +26,8 @@ export default function AdminPanel() {
   const router = useRouter();
   const { isAdmin, profile } = useAuth();
   const [tab, setTab] = useState<'users' | 'events'>('users');
-  const [pendingUsers, setPendingUsers] = useState<Profile[]>([]);
+  const [userFilter, setUserFilter] = useState<'all' | 'pending' | 'approved'>('all');
+  const [users, setUsers] = useState<Profile[]>([]);
   const [pendingEvents, setPendingEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState<string | null>(null);
@@ -36,23 +37,28 @@ export default function AdminPanel() {
       router.replace('/(tabs)');
       return;
     }
-    fetchPendingUsers();
+    fetchUsers();
     fetchPendingEvents();
-  }, [isAdmin]);
+  }, [isAdmin, userFilter]);
 
-  const fetchPendingUsers = async () => {
+  const fetchUsers = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from('profiles')
         .select('*')
-        .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
+      if (userFilter !== 'all') {
+        query = query.eq('status', userFilter);
+      }
+
+      const { data, error } = await query;
+
       if (error) throw error;
-      setPendingUsers(data || []);
+      setUsers(data || []);
     } catch (error) {
-      console.error('Error fetching pending users:', error);
+      console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
     }
@@ -90,7 +96,7 @@ export default function AdminPanel() {
         .eq('id', userId);
 
       if (error) throw error;
-      await fetchPendingUsers();
+      await fetchUsers();
       alert(`User ${approved ? 'approved' : 'rejected'} successfully`);
     } catch (error) {
       console.error('Error updating user status:', error);
@@ -112,11 +118,34 @@ export default function AdminPanel() {
         .eq('id', userId);
 
       if (error) throw error;
-      await fetchPendingUsers();
+      await fetchUsers();
       alert(`User role updated to ${newRole} successfully`);
     } catch (error) {
       console.error('Error updating user role:', error);
       alert('Failed to update user role');
+    } finally {
+      setProcessing(null);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setProcessing(userId);
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+
+      if (error) throw error;
+      await fetchUsers();
+      alert(`User ${userName} deleted successfully`);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Failed to delete user');
     } finally {
       setProcessing(null);
     }
@@ -158,8 +187,8 @@ export default function AdminPanel() {
     return <LoadingSpinner fullScreen text="Loading admin panel..." />;
   }
 
-  const renderPendingUser = ({ item }: { item: Profile }) => (
-    <View className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+  const renderUser = ({ item }: { item: Profile }) => (
+    <View className="bg-white border border-instagram-border rounded-lg p-4 mb-4">
       {/* User info */}
       <View className="flex-row items-start mb-3">
         <Avatar
@@ -168,13 +197,20 @@ export default function AdminPanel() {
           size="md"
         />
         <View className="flex-1 ml-3">
-          <Text className="text-lg font-bold text-gray-900">
+          <Text className="text-lg font-bold text-black">
             {item.first_name} {item.last_name}
           </Text>
           <Text className="text-sm text-gray-600">{item.email}</Text>
           <Text className="text-sm text-gray-600">{item.phone}</Text>
         </View>
-        <Badge variant="warning">Pending</Badge>
+        <View className="gap-1">
+          <Badge variant={item.status === 'approved' ? 'success' : item.status === 'pending' ? 'warning' : 'danger'}>
+            {item.status}
+          </Badge>
+          {item.role === 'admin' && (
+            <Badge variant="primary">Admin</Badge>
+          )}
+        </View>
       </View>
 
       {/* Organization info */}
@@ -211,35 +247,48 @@ export default function AdminPanel() {
 
       {/* Action buttons */}
       <View className="gap-2">
+        {item.status === 'pending' && (
+          <View className="flex-row gap-2">
+            <TouchableOpacity
+              className="flex-1 py-3 bg-green-600 rounded-lg"
+              onPress={() => handleUserApproval(item.id, true)}
+              disabled={processing === item.id}
+            >
+              <Text className="text-center font-semibold text-white">
+                {processing === item.id ? 'Processing...' : 'Approve'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="flex-1 py-3 bg-red-600 rounded-lg"
+              onPress={() => handleUserApproval(item.id, false)}
+              disabled={processing === item.id}
+            >
+              <Text className="text-center font-semibold text-white">
+                {processing === item.id ? 'Processing...' : 'Reject'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className="flex-1 py-3 bg-green-600 rounded-lg"
-            onPress={() => handleUserApproval(item.id, true)}
+            className="flex-1 py-3 bg-instagram-blue rounded-lg"
+            onPress={() => handleToggleAdmin(item.id, item.role || 'member')}
             disabled={processing === item.id}
           >
             <Text className="text-center font-semibold text-white">
-              {processing === item.id ? 'Processing...' : 'Approve'}
+              {item.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex-1 py-3 bg-red-600 rounded-lg"
-            onPress={() => handleUserApproval(item.id, false)}
+            className="flex-1 py-3 bg-red-500 rounded-lg border border-red-600"
+            onPress={() => handleDeleteUser(item.id, `${item.first_name} ${item.last_name}`)}
             disabled={processing === item.id}
           >
             <Text className="text-center font-semibold text-white">
-              {processing === item.id ? 'Processing...' : 'Reject'}
+              Delete User
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          className="py-3 bg-instagram-blue rounded-lg border border-instagram-border"
-          onPress={() => handleToggleAdmin(item.id, item.role || 'member')}
-          disabled={processing === item.id}
-        >
-          <Text className="text-center font-semibold text-white">
-            {item.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -345,19 +394,61 @@ export default function AdminPanel() {
 
       {/* Content */}
       {tab === 'users' ? (
-        <FlatList
-          data={pendingUsers}
-          renderItem={renderPendingUser}
-          keyExtractor={(item) => item.id}
-          contentContainerClassName="p-4"
-          ListEmptyComponent={
-            <View className="flex-1 justify-center items-center p-8">
-              <Text className="text-gray-500 text-center">
-                No pending user approvals
+        <View className="flex-1">
+          {/* User filter tabs */}
+          <View className="flex-row gap-2 px-4 pt-4">
+            <TouchableOpacity
+              className={`flex-1 py-2 rounded-lg border ${
+                userFilter === 'all' ? 'bg-black border-black' : 'bg-white border-instagram-border'
+              }`}
+              onPress={() => setUserFilter('all')}
+            >
+              <Text className={`text-center text-xs font-semibold ${
+                userFilter === 'all' ? 'text-white' : 'text-black'
+              }`}>
+                All Users
               </Text>
-            </View>
-          }
-        />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className={`flex-1 py-2 rounded-lg border ${
+                userFilter === 'pending' ? 'bg-black border-black' : 'bg-white border-instagram-border'
+              }`}
+              onPress={() => setUserFilter('pending')}
+            >
+              <Text className={`text-center text-xs font-semibold ${
+                userFilter === 'pending' ? 'text-white' : 'text-black'
+              }`}>
+                Pending
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className={`flex-1 py-2 rounded-lg border ${
+                userFilter === 'approved' ? 'bg-black border-black' : 'bg-white border-instagram-border'
+              }`}
+              onPress={() => setUserFilter('approved')}
+            >
+              <Text className={`text-center text-xs font-semibold ${
+                userFilter === 'approved' ? 'text-white' : 'text-black'
+              }`}>
+                Approved
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            data={users}
+            renderItem={renderUser}
+            keyExtractor={(item) => item.id}
+            contentContainerClassName="p-4"
+            ListEmptyComponent={
+              <View className="flex-1 justify-center items-center p-8">
+                <Text className="text-gray-500 text-center">
+                  No users found
+                </Text>
+              </View>
+            }
+          />
+        </View>
       ) : (
         <FlatList
           data={pendingEvents}
