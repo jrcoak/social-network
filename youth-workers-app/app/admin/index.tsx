@@ -33,16 +33,20 @@ export default function AdminPanel() {
   const [processing, setProcessing] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('AdminPanel mounted, isAdmin:', isAdmin);
     if (!isAdmin) {
+      console.log('Not admin, redirecting...');
       router.replace('/(tabs)');
       return;
     }
+    console.log('Fetching users and events...');
     fetchUsers();
     fetchPendingEvents();
   }, [isAdmin, userFilter]);
 
   const fetchUsers = async () => {
     try {
+      console.log('fetchUsers called, filter:', userFilter);
       setLoading(true);
       let query = supabase
         .from('profiles')
@@ -55,7 +59,11 @@ export default function AdminPanel() {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching users:', error);
+        throw error;
+      }
+      console.log('Fetched users:', data?.length);
       setUsers(data || []);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -184,7 +192,10 @@ export default function AdminPanel() {
     }
   };
 
+  console.log('Render - isAdmin:', isAdmin, 'loading:', loading, 'users:', users.length);
+
   if (!isAdmin) {
+    console.log('Rendering access denied');
     return (
       <View className="flex-1 justify-center items-center bg-white p-6">
         <Text className="text-xl font-bold text-gray-900 mb-2">Access Denied</Text>
@@ -196,8 +207,11 @@ export default function AdminPanel() {
   }
 
   if (loading) {
+    console.log('Rendering loading spinner');
     return <LoadingSpinner fullScreen text="Loading admin panel..." />;
   }
+
+  console.log('Rendering main admin panel');
 
   const renderUser = ({ item }: { item: Profile }) => (
     <View className="bg-white border border-instagram-border rounded-lg p-4 mb-4">
@@ -216,11 +230,11 @@ export default function AdminPanel() {
           <Text className="text-sm text-gray-600">{item.phone}</Text>
         </View>
         <View className="gap-1">
-          <Badge variant={item.status === 'approved' ? 'success' : item.status === 'pending' ? 'warning' : 'danger'}>
+          <Badge variant={item.status === 'approved' ? 'success' : item.status === 'pending' ? 'warning' : 'error'}>
             {item.status}
           </Badge>
           {item.role === 'admin' && (
-            <Badge variant="primary">Admin</Badge>
+            <Badge variant="info">Admin</Badge>
           )}
         </View>
       </View>
