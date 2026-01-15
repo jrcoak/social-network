@@ -19,6 +19,7 @@ const onboardingSchema = z.object({
     .max(15, 'Phone number too long')
     .regex(/^[\d\s\-\(\)\+]+$/, 'Phone number can only contain digits, spaces, dashes, parentheses, and +')
     .refine((val) => val.replace(/\D/g, '').length >= 10, 'Phone number must have at least 10 digits'),
+  email: z.string().email('Must be a valid email address').max(100, 'Email too long'),
   role_title: z.string().min(1, 'Role/title is required').max(100, 'Role/title too long'),
   organization_name: z.string().min(1, 'Organization name is required').max(100, 'Organization name too long'),
   organization_address: z.string().min(1, 'Address is required').max(200, 'Address too long'),
@@ -57,6 +58,7 @@ export default function Onboarding() {
       first_name: profile?.first_name || '',
       last_name: profile?.last_name || '',
       phone: profile?.phone || '',
+      email: profile?.email || user?.email || '',
       role_title: profile?.role_title || '',
       organization_name: profile?.organization_name || '',
       organization_address: profile?.organization_address || '',
@@ -84,6 +86,7 @@ export default function Onboarding() {
           first_name: data.first_name,
           last_name: data.last_name,
           phone: data.phone,
+          email: data.email,
           birthday: data.birthday,
           role_title: data.role_title,
           organization_name: data.organization_name,
@@ -187,6 +190,22 @@ export default function Onboarding() {
                   error={errors.phone?.message}
                   placeholder="(555) 123-4567"
                   keyboardType="phone-pad"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  label="Email"
+                  value={value}
+                  onChangeText={onChange}
+                  error={errors.email?.message}
+                  placeholder="your.email@example.com"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
               )}
             />

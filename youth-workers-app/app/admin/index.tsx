@@ -100,6 +100,28 @@ export default function AdminPanel() {
     }
   };
 
+  const handleToggleAdmin = async (userId: string, currentRole: string) => {
+    try {
+      setProcessing(userId);
+      const newRole = currentRole === 'admin' ? 'member' : 'admin';
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          role: newRole,
+        })
+        .eq('id', userId);
+
+      if (error) throw error;
+      await fetchPendingUsers();
+      alert(`User role updated to ${newRole} successfully`);
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      alert('Failed to update user role');
+    } finally {
+      setProcessing(null);
+    }
+  };
+
   const handleEventApproval = async (eventId: string, approved: boolean) => {
     try {
       setProcessing(eventId);
@@ -188,23 +210,34 @@ export default function AdminPanel() {
       </View>
 
       {/* Action buttons */}
-      <View className="flex-row gap-2">
+      <View className="gap-2">
+        <View className="flex-row gap-2">
+          <TouchableOpacity
+            className="flex-1 py-3 bg-green-600 rounded-lg"
+            onPress={() => handleUserApproval(item.id, true)}
+            disabled={processing === item.id}
+          >
+            <Text className="text-center font-semibold text-white">
+              {processing === item.id ? 'Processing...' : 'Approve'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex-1 py-3 bg-red-600 rounded-lg"
+            onPress={() => handleUserApproval(item.id, false)}
+            disabled={processing === item.id}
+          >
+            <Text className="text-center font-semibold text-white">
+              {processing === item.id ? 'Processing...' : 'Reject'}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
-          className="flex-1 py-3 bg-green-600 rounded-lg"
-          onPress={() => handleUserApproval(item.id, true)}
+          className="py-3 bg-instagram-blue rounded-lg border border-instagram-border"
+          onPress={() => handleToggleAdmin(item.id, item.role || 'member')}
           disabled={processing === item.id}
         >
           <Text className="text-center font-semibold text-white">
-            {processing === item.id ? 'Processing...' : 'Approve'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex-1 py-3 bg-red-600 rounded-lg"
-          onPress={() => handleUserApproval(item.id, false)}
-          disabled={processing === item.id}
-        >
-          <Text className="text-center font-semibold text-white">
-            {processing === item.id ? 'Processing...' : 'Reject'}
+            {item.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
           </Text>
         </TouchableOpacity>
       </View>
