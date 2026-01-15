@@ -451,7 +451,7 @@ export default function AdminPanel() {
             data={users}
             renderItem={renderUser}
             keyExtractor={(item) => item.id}
-            contentContainerClassName="p-4"
+            contentContainerStyle={{ padding: 16 }}
             ListEmptyComponent={
               <View className="flex-1 justify-center items-center p-8">
                 <Text className="text-gray-500 text-center">
@@ -466,7 +466,7 @@ export default function AdminPanel() {
           data={pendingEvents}
           renderItem={renderPendingEvent}
           keyExtractor={(item) => item.id}
-          contentContainerClassName="p-4"
+          contentContainerStyle={{ padding: 16 }}
           ListEmptyComponent={
             <View className="flex-1 justify-center items-center p-8">
               <Text className="text-gray-500 text-center">
